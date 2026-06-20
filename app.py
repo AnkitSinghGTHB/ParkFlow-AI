@@ -95,6 +95,83 @@ st.markdown("""
 HOTSPOTS_FILE = os.path.join("data", "parking_hotspots.csv")
 MODEL_FILE = os.path.join("data", "predictor.pkl")
 
+def clean_hotspot_names(df):
+    names_map = {
+        480: "Gubbi Thotadappa Road (Majestic Interchange)",
+        736: "Rajajinagar 1st Block Main Road",
+        719: "Shivajinagar Central Corridor",
+        285: "Bellandur Outer Ring Road (ORR) Bypass",
+        780: "Malleshwaram 8th Cross Road",
+        617: "Vijayanagar Chord Road Bottleneck",
+        1240: "Yelahanka High Street Sector",
+        584: "Mysore Road Arterial Link",
+        964: "Mahadevapura IT Corridor (Hoodi)",
+        1104: "Hebbal Flyover Approach Zone",
+        835: "Jaya Chamarajendra (JC) Road Junction",
+        651: "Indiranagar 100ft Road Corridor",
+        489: "Whitefield Main Road (ITPL Link)",
+        848: "Frazer Town Promenade Road",
+        575: "Koramangala 80ft Road Corridor",
+        254: "Jayanagar 4th Block Shopping Street",
+        375: "Basavanagudi Gandhi Bazaar Road",
+        744: "MG Road Metro Station Area",
+        11: "Hosur Road Toll Gate Exit",
+        898: "Kalyan Nagar Double Road",
+        183: "HSR Layout Sector 1 Main Road",
+        873: "Banaswadi Main Road Bottleneck",
+        497: "Marathahalli Bridge Underpass",
+        444: "Chandra Layout Main Road",
+        684: "Chickpet Commercial Alleyway",
+        635: "Residency Road Commercial Zone",
+        71: "Bommanahalli Junction (Hosur Rd)",
+        864: "Kaggadasapura Railway Crossing Rd",
+        523: "Domlur Flyover Exit Corridor",
+        323: "Koramangala 5th Block Hub",
+        943: "Kammanahalli Main Road",
+        563: "Lalbagh Road Double Road",
+        134: "BTM Layout 2nd Stage Ring Rd",
+        1071: "RT Nagar Main Road Corridor",
+        657: "Halasuru Metro Station Access Road",
+        627: "Richmond Road Primary Arterial",
+        1166: "Sanjay Nagar Main Road",
+        775: "Rajajinagar Chord Road Link",
+        811: "Cantonment Railway Station Approach",
+        555: "Mysore Road Toll Gate Junction",
+        465: "Wilson Garden 10th Cross",
+        282: "HSR Layout Sector 3 Junction",
+        849: "CV Raman Nagar Main Road",
+        1213: "Vidyaranyapura Main Road",
+        342: "Jayanagar 9th Block Circle",
+        170: "JP Nagar 2nd Phase Underpass",
+        636: "Whitefield Outer Ring Road",
+        1274: "Bagalur Main Road Intersection",
+        583: "Chamrajpet 80ft Road",
+        706: "Cubbon Park Police Station Area",
+        1050: "Hebbal Kempapura Main Road",
+        117: "Electronic City Phase 1 Entry",
+        1001: "Peenya Industrial Area Stage 1",
+        715: "Kasturi Nagar Outer Ring Road",
+        1089: "Yeswanthpur Railway Station Rd",
+        198: "Bannerghatta Road (MICO Layout)",
+        275: "Silk Board Junction Flyover",
+        157: "BTM Layout 1st Stage Main Road",
+        797: "Varthur Road (Gunjur Link)",
+        1014: "Sahakara Nagar Main Road"
+    }
+    
+    for idx, row in df.iterrows():
+        c_id = int(row['cluster_id'])
+        if c_id in names_map:
+            df.at[idx, 'name'] = names_map[c_id]
+        elif row['name'] == 'Unnamed Road' or pd.isna(row['name']):
+            pois = str(row['poi_details'])
+            if pois != 'None' and len(pois) > 3:
+                first_poi = pois.split(',')[0].split('(')[0].strip()
+                df.at[idx, 'name'] = f"{str(row['highway']).capitalize()} near {first_poi}"
+            else:
+                df.at[idx, 'name'] = f"Arterial Corridor (Cluster #{c_id})"
+    return df
+
 # Load Datasets safely
 def load_hotspots():
     if os.path.exists(HOTSPOTS_FILE):
@@ -108,6 +185,9 @@ def load_predictor():
     return None
 
 hotspots_df = load_hotspots()
+if hotspots_df is not None:
+    hotspots_df = clean_hotspot_names(hotspots_df)
+
 predictor_model = load_predictor()
 
 if hotspots_df is None:
@@ -292,8 +372,8 @@ with tab_map:
             return [250, 204, 21, 220]  # Yellow
 
     hotspots_df['color'] = hotspots_df['tdi'].apply(get_color)
-    # Radius based on violation count (scaled)
-    hotspots_df['radius'] = np.sqrt(hotspots_df['violation_count']) * 15
+    # Radius based on violation count (scaled properly to be visually aesthetic and localized, e.g. 60m to 300m)
+    hotspots_df['radius'] = 60 + (np.sqrt(hotspots_df['violation_count']) / np.sqrt(hotspots_df['violation_count'].max())) * 240
 
     # Define Pydeck Layers
     layers = [
@@ -308,7 +388,7 @@ with tab_map:
         )
     ]
 
-    # Calculate and Add Route LineLayer if enabled
+    # Calculate and Add Route LineLayer & visual path markings if enabled
     route_df = pd.DataFrame()
     if enable_routing:
         start_coords = POLICE_STATIONS[start_station]
@@ -337,6 +417,7 @@ with tab_map:
             
         route_df = pd.DataFrame(route_data)
         
+        # 1. Draw route connection lines
         layers.append(
             pdk.Layer(
                 "LineLayer",
@@ -346,6 +427,54 @@ with tab_map:
                 get_color=[240, 82, 82, 255], # Solid Red route line
                 get_width=4,
                 pickable=True
+            )
+        )
+        
+        # 2. Draw starting police station marker
+        station_df = pd.DataFrame([{
+            'lat': start_coords[0],
+            'lon': start_coords[1],
+            'name': start_station
+        }])
+        layers.append(
+            pdk.Layer(
+                "ScatterplotLayer",
+                station_df,
+                get_position=["lon", "lat"],
+                get_fill_color=[59, 130, 246, 255], # Bright Blue
+                get_radius=180, # Distinct police station circle size
+                pickable=True,
+                auto_highlight=True
+            )
+        )
+        
+        # 3. Draw text labels for the path sequence
+        text_data = [{
+            'lat': start_coords[0] + 0.0008, # Offset slightly north to avoid overlapping dot
+            'lon': start_coords[1],
+            'text': f"🚨 START: {start_station}",
+            'color': [59, 130, 246, 255]
+        }]
+        for idx, row in route_df.iterrows():
+            text_data.append({
+                'lat': row['end_lat'] + 0.0008, # Offset slightly north
+                'lon': row['end_lon'],
+                'text': f"📌 STOP {idx+1}: {row['name']}",
+                'color': [240, 82, 82, 255]
+            })
+        text_df = pd.DataFrame(text_data)
+        
+        layers.append(
+            pdk.Layer(
+                "TextLayer",
+                text_df,
+                get_position=["lon", "lat"],
+                get_text="text",
+                get_size=15,
+                get_color="color",
+                get_alignment_baseline="'bottom'",
+                get_angle=0,
+                pickable=False
             )
         )
 
