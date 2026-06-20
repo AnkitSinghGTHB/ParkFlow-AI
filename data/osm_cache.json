@@ -1,1 +1,1026 @@
-{}
+{
+    "road_12.9721_77.5774": {
+        "highway": "tertiary",
+        "name": "Hospital Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9721_77.5774": [
+        {
+            "type": "hospital",
+            "name": "Amar Hospital"
+        }
+    ],
+    "road_13.0014_77.5520": {
+        "highway": "tertiary",
+        "name": "K B Venkatesh Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_13.0014_77.5520": [
+        {
+            "type": "hospital",
+            "name": "Ananya Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "The Family Doctor Malleswaram"
+        },
+        {
+            "type": "hospital",
+            "name": "Apollo Cradle Children's Hospital"
+        }
+    ],
+    "road_12.9820_77.6080": {
+        "highway": "tertiary",
+        "name": "Bowring Hospital Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9820_77.6080": [
+        {
+            "type": "hospital",
+            "name": "Bowring and Lady Curzon Hospitals"
+        },
+        {
+            "type": "school",
+            "name": "BBMP Girls' School"
+        }
+    ],
+    "road_12.9352_77.6908": {
+        "highway": "primary",
+        "name": "New Horizon College Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9352_77.6908": [
+        {
+            "type": "university",
+            "name": "New Horizon College of Engineering"
+        }
+    ],
+    "road_13.0001_77.5712": {
+        "highway": "tertiary",
+        "name": "8th Cross Road",
+        "lanes": "1",
+        "maxspeed": "40"
+    },
+    "poi_13.0001_77.5712": [
+        {
+            "type": "school",
+            "name": "Ubhaya Vedanta Pravarthana Sabha"
+        },
+        {
+            "type": "hospital",
+            "name": "Leela Hospital and Diagnostic Center"
+        },
+        {
+            "type": "hospital",
+            "name": "RICH CARE HOMEOPATHY"
+        },
+        {
+            "type": "language_school",
+            "name": "inlingua"
+        },
+        {
+            "type": "college",
+            "name": "Nagarathna Srikantaiah Paramedical College"
+        },
+        {
+            "type": "school",
+            "name": "Vidya Mandir School"
+        }
+    ],
+    "road_12.9748_77.5480": {
+        "highway": "primary",
+        "name": "Magadi Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9748_77.5480": [
+        {
+            "type": "hospital",
+            "name": "Shivakrupa Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Spine Care And Ortho Care Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Tanmay Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Sriprasad Ayurveda"
+        },
+        {
+            "type": "hospital",
+            "name": "Bengaluru Child Neurology and Rehabilitaion Centre"
+        },
+        {
+            "type": "school",
+            "name": "Prameelabhai BBMP High School"
+        }
+    ],
+    "road_13.0710_77.5885": {
+        "highway": "secondary",
+        "name": "GKVK Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_13.0710_77.5885": [],
+    "road_12.9672_77.5379": {
+        "highway": "tertiary",
+        "name": "1st Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9672_77.5379": [
+        {
+            "type": "college",
+            "name": "Government Degree College"
+        }
+    ],
+    "road_13.0085_77.6954": {
+        "highway": "tertiary",
+        "name": "Vasavi Mahal Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_13.0085_77.6954": [
+        {
+            "type": "hospital",
+            "name": "Sriram Hospital, Bangalore"
+        },
+        {
+            "type": "hospital",
+            "name": "Suresh Hospital, Bengaluru Urban"
+        },
+        {
+            "type": "hospital",
+            "name": "Sri Ram Netralaya and Surgical Centre"
+        },
+        {
+            "type": "hospital",
+            "name": "Patil Hospital, Bengaluru Urban"
+        },
+        {
+            "type": "hospital",
+            "name": "R R Hospital"
+        }
+    ],
+    "road_13.0356_77.5891": {
+        "highway": "trunk",
+        "name": "Bellary Road",
+        "lanes": "3",
+        "maxspeed": "60"
+    },
+    "poi_13.0356_77.5891": [
+        {
+            "type": "hospital",
+            "name": "Baptist Hospital"
+        }
+    ],
+    "road_12.9926_77.5889": {
+        "highway": "tertiary",
+        "name": "8th Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9926_77.5889": [
+        {
+            "type": "school",
+            "name": "Mount Carmel Central School"
+        }
+    ],
+    "road_12.9735_77.6185": {
+        "highway": "primary",
+        "name": "Mahatma Gandhi Road",
+        "lanes": "2",
+        "maxspeed": "30"
+    },
+    "poi_12.9735_77.6185": [
+        {
+            "type": "school",
+            "name": "Purvankara academy of excellence"
+        }
+    ],
+    "road_12.9632_77.7172": {
+        "highway": "primary",
+        "name": "Kundalahalli Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9632_77.7172": [
+        {
+            "type": "school",
+            "name": "Narayana"
+        }
+    ],
+    "road_12.9966_77.6124": {
+        "highway": "tertiary",
+        "name": "Coles Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9966_77.6124": [
+        {
+            "type": "hospital",
+            "name": "Seventh Day Adventist Hospital"
+        },
+        {
+            "type": "school",
+            "name": "Fathima's Girls High School"
+        },
+        {
+            "type": "hospital",
+            "name": "Dr.Agarwal Eye Hospital, Frazer Town, Bangalore"
+        },
+        {
+            "type": "hospital",
+            "name": "Aspire Hospital"
+        },
+        {
+            "type": "prep_school",
+            "name": "Samruddhi Career Academy"
+        },
+        {
+            "type": "school",
+            "name": "Seventh Day Adventist School"
+        },
+        {
+            "type": "school",
+            "name": "Seventh Day Adventist Higher Secondary School"
+        }
+    ],
+    "road_12.9691_77.6434": {
+        "highway": "tertiary",
+        "name": "13th Main Road",
+        "lanes": "2",
+        "maxspeed": "25"
+    },
+    "poi_12.9691_77.6434": [
+        {
+            "type": "hospital",
+            "name": "Dr. Rajesh Hospitals Eye and Dental"
+        },
+        {
+            "type": "hospital",
+            "name": "Athoz Hospitals"
+        },
+        {
+            "type": "school",
+            "name": "New Horizon Public School"
+        }
+    ],
+    "road_12.9285_77.5832": {
+        "highway": "secondary",
+        "name": "30th Cross Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9285_77.5832": [
+        {
+            "type": "hospital",
+            "name": "Vasan Eye Care Hospital, Jayanagar"
+        },
+        {
+            "type": "hospital",
+            "name": "Narayan Multispeciality clinic"
+        },
+        {
+            "type": "bus_station",
+            "name": "Jayanagar TTMC"
+        },
+        {
+            "type": "college",
+            "name": "RV Dental College"
+        }
+    ],
+    "road_12.9440_77.5713": {
+        "highway": "tertiary",
+        "name": "Gandhi Bazaar Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9440_77.5713": [
+        {
+            "type": "hospital",
+            "name": "Mitralaya Hospital"
+        }
+    ],
+    "road_12.9813_77.5985": {
+        "highway": "primary",
+        "name": "Queen's Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9813_77.5985": [],
+    "road_12.8418_77.6461": {
+        "highway": "secondary",
+        "name": "Neeladri Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.8418_77.6461": [
+        {
+            "type": "hospital",
+            "name": "Srujana Hospital"
+        }
+    ],
+    "road_13.0003_77.6769": {
+        "highway": "trunk",
+        "name": "Tin Factory Flyover",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_13.0003_77.6769": [
+        {
+            "type": "college",
+            "name": "Lowry Adventist College And Group Of Institutions"
+        },
+        {
+            "type": "college",
+            "name": "Lowry Memorial College"
+        }
+    ],
+    "road_12.9124_77.6362": {
+        "highway": "tertiary",
+        "name": "17th Cross Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9124_77.6362": [
+        {
+            "type": "bus_station",
+            "name": "HSR Layout"
+        },
+        {
+            "type": "school",
+            "name": "EHPS Baldwin School"
+        },
+        {
+            "type": "prep_school",
+            "name": "Vedantu"
+        },
+        {
+            "type": "school",
+            "name": "Lawerence School"
+        },
+        {
+            "type": "school",
+            "name": "JSS EHPS School"
+        }
+    ],
+    "road_12.9963_77.6686": {
+        "highway": "trunk",
+        "name": "Tin Factory Flyover",
+        "lanes": "3",
+        "maxspeed": "40"
+    },
+    "poi_12.9963_77.6686": [],
+    "road_12.9578_77.7016": {
+        "highway": "tertiary",
+        "name": "Service Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9578_77.7016": [
+        {
+            "type": "school",
+            "name": "Unnamed POI"
+        },
+        {
+            "type": "hospital",
+            "name": "MGA Hospital"
+        },
+        {
+            "type": "school",
+            "name": "Sri Chaitanya School"
+        }
+    ],
+    "road_12.9533_77.5425": {
+        "highway": "trunk",
+        "name": "Mysore Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9533_77.5425": [
+        {
+            "type": "bus_station",
+            "name": "Mysore Road Bus Station"
+        },
+        {
+            "type": "bus_station",
+            "name": "KSRTC Mysore Road Satellite Bus Station"
+        }
+    ],
+    "road_12.9757_77.5597": {
+        "highway": "tertiary",
+        "name": "2nd Cross Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9757_77.5597": [
+        {
+            "type": "school",
+            "name": "Unnamed POI"
+        }
+    ],
+    "road_12.9726_77.6072": {
+        "highway": "secondary",
+        "name": "Brigade Road",
+        "lanes": "3",
+        "maxspeed": "40"
+    },
+    "poi_12.9726_77.6072": [
+        {
+            "type": "college",
+            "name": "JD Institute of Fashion Technology"
+        },
+        {
+            "type": "prep_school",
+            "name": "Pearl Academy"
+        },
+        {
+            "type": "college",
+            "name": "KSRP Research and Training Center"
+        },
+        {
+            "type": "college",
+            "name": "St Josephs College of Commerce"
+        },
+        {
+            "type": "school",
+            "name": "St. Patrick's High School"
+        }
+    ],
+    "road_12.8903_77.6389": {
+        "highway": "motorway",
+        "name": "Electronic City Flyover",
+        "lanes": "2",
+        "maxspeed": "60"
+    },
+    "poi_12.8903_77.6389": [
+        {
+            "type": "school",
+            "name": "New Bharat International Kudlu Gate, Bommana Halli"
+        }
+    ],
+    "road_12.9956_77.6957": {
+        "highway": "primary",
+        "name": "Whitefield Road",
+        "lanes": "3",
+        "maxspeed": "40"
+    },
+    "poi_12.9956_77.6957": [
+        {
+            "type": "school",
+            "name": "Unnamed POI"
+        }
+    ],
+    "road_12.9598_77.6469": {
+        "highway": "primary",
+        "name": "HAL Old Airport Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9598_77.6469": [
+        {
+            "type": "hospital",
+            "name": "Manipal Hospital, Bengaluru Urban"
+        },
+        {
+            "type": "hospital",
+            "name": "Manipal Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "BBMP Primary Health Center"
+        }
+    ],
+    "road_12.9354_77.6153": {
+        "highway": "tertiary",
+        "name": "1st A Cross Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9354_77.6153": [
+        {
+            "type": "hospital",
+            "name": "Aparna Hospital"
+        },
+        {
+            "type": "school",
+            "name": "Holy Saint Eng Sch Koramangala"
+        },
+        {
+            "type": "school",
+            "name": "Neena HPS Kormangala"
+        },
+        {
+            "type": "college",
+            "name": "Jyoti Nivas Women's College"
+        }
+    ],
+    "road_13.0057_77.6859": {
+        "highway": "trunk",
+        "name": "Old Madras Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_13.0057_77.6859": [
+        {
+            "type": "school",
+            "name": "ITI Vidya Mandir School"
+        }
+    ],
+    "road_12.9620_77.5983": {
+        "highway": "tertiary",
+        "name": "Langford Road",
+        "lanes": "2",
+        "maxspeed": "30"
+    },
+    "poi_12.9620_77.5983": [
+        {
+            "type": "hospital",
+            "name": "Republic Hospital"
+        },
+        {
+            "type": "school",
+            "name": "Baldwin Girls' High School"
+        }
+    ],
+    "road_12.9065_77.6301": {
+        "highway": "tertiary",
+        "name": "Service Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9065_77.6301": [
+        {
+            "type": "hospital",
+            "name": "Blossoms Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Prashanth Hospital"
+        },
+        {
+            "type": "school",
+            "name": "GKHPS Bommanahalli"
+        }
+    ],
+    "road_13.0279_77.5747": {
+        "highway": "tertiary",
+        "name": "80 Feet Road",
+        "lanes": "2",
+        "maxspeed": "50"
+    },
+    "poi_13.0279_77.5747": [
+        {
+            "type": "hospital",
+            "name": "Nethra Eye Hospital"
+        }
+    ],
+    "road_12.9717_77.6581": {
+        "highway": "secondary",
+        "name": "GM Palya Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9717_77.6581": [
+        {
+            "type": "school",
+            "name": "Poorna Prajna Education Centre"
+        }
+    ],
+    "road_12.9713_77.5968": {
+        "highway": "tertiary",
+        "name": "Vittal Mallya Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9713_77.5968": [
+        {
+            "type": "school",
+            "name": "Bishop Cotton Boys School"
+        },
+        {
+            "type": "school",
+            "name": "St. Joseph's Indian High School"
+        }
+    ],
+    "road_13.0475_77.5756": {
+        "highway": "tertiary",
+        "name": "Sanjaynagar Main Road",
+        "lanes": "2",
+        "maxspeed": "50"
+    },
+    "poi_13.0475_77.5756": [
+        {
+            "type": "school",
+            "name": "Shanthiniketan School"
+        }
+    ],
+    "road_12.9887_77.5377": {
+        "highway": "tertiary",
+        "name": "1st Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9887_77.5377": [
+        {
+            "type": "college",
+            "name": "Zee Institute of Creative Arts"
+        },
+        {
+            "type": "language_school",
+            "name": "Sayuri"
+        }
+    ],
+    "road_12.9894_77.5997": {
+        "highway": "primary",
+        "name": "Queen's Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9894_77.5997": [
+        {
+            "type": "hospital",
+            "name": "Shifa Hospital, Bengaluru Urban"
+        },
+        {
+            "type": "school",
+            "name": "St. Xavier's Boys School"
+        },
+        {
+            "type": "hospital",
+            "name": "CSI Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Shifa Hospital, Bengaluru Urban"
+        },
+        {
+            "type": "school",
+            "name": "Al-Ameen Kambal Posh"
+        },
+        {
+            "type": "school",
+            "name": "CEZM High School"
+        },
+        {
+            "type": "hospital",
+            "name": "Charaka Super Speciality Hospital"
+        },
+        {
+            "type": "school",
+            "name": "St. Mary's Public School"
+        }
+    ],
+    "road_12.9608_77.5283": {
+        "highway": "tertiary",
+        "name": "4th Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9608_77.5283": [
+        {
+            "type": "school",
+            "name": "Global Chess Academy India"
+        },
+        {
+            "type": "hospital",
+            "name": "Anurag Medical Center"
+        },
+        {
+            "type": "college",
+            "name": "Chandra Gymkhana Institute"
+        },
+        {
+            "type": "hospital",
+            "name": "Hospital Sharavathi"
+        },
+        {
+            "type": "hospital",
+            "name": "Prasad Nethralaya"
+        },
+        {
+            "type": "bus_station",
+            "name": "Chandra Layout Bus Station"
+        }
+    ],
+    "road_12.9560_77.5855": {
+        "highway": "primary",
+        "name": "Lalbagh Road",
+        "lanes": "3",
+        "maxspeed": "40"
+    },
+    "poi_12.9560_77.5855": [
+        {
+            "type": "college",
+            "name": "Al-Ameen Arts and Science College"
+        }
+    ],
+    "road_12.9310_77.6321": {
+        "highway": "secondary",
+        "name": "80 Feet Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9310_77.6321": [],
+    "road_12.9936_77.6625": {
+        "highway": "primary",
+        "name": "Swamy Vivekananda Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9936_77.6625": [
+        {
+            "type": "school",
+            "name": "Kannada Government School"
+        }
+    ],
+    "road_13.0628_77.5892": {
+        "highway": "tertiary",
+        "name": "60 Feet Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_13.0628_77.5892": [
+        {
+            "type": "school",
+            "name": "Nathaniel School of Music"
+        },
+        {
+            "type": "driving_school",
+            "name": "Best New India Motor Driving School"
+        },
+        {
+            "type": "hospital",
+            "name": "Healing Hands Clinic - Sahakar Nagar, Bengaluru"
+        }
+    ],
+    "road_12.9384_77.5845": {
+        "highway": "secondary",
+        "name": "T. Mariyappa Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9384_77.5845": [
+        {
+            "type": "hospital",
+            "name": "Ramakrishna Nursing Home and Hospital"
+        },
+        {
+            "type": "school",
+            "name": "Community English High School"
+        },
+        {
+            "type": "school",
+            "name": "Sree Rama Vidyalaya"
+        },
+        {
+            "type": "hospital",
+            "name": "Apollo Specialty Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "clinic"
+        },
+        {
+            "type": "hospital",
+            "name": "Big Hospitals"
+        },
+        {
+            "type": "school",
+            "name": "Rani Sarla Devi School"
+        },
+        {
+            "type": "hospital",
+            "name": "Apollo Speciality Hospital"
+        }
+    ],
+    "road_12.9148_77.5740": {
+        "highway": "primary",
+        "name": "Kanakapura Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9148_77.5740": [],
+    "poi_12.9721_77.7117": [],
+    "road_13.0973_77.5993": {
+        "highway": "trunk",
+        "name": "Bellary Road",
+        "lanes": "3",
+        "maxspeed": "80"
+    },
+    "road_12.9644_77.5540": {
+        "highway": "tertiary",
+        "name": "Hosahalli Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "road_12.9781_77.5909": {
+        "highway": "primary",
+        "name": "Doctor B R Ambedkar Veedhi",
+        "lanes": "3",
+        "maxspeed": "40"
+    },
+    "poi_12.9781_77.5909": [],
+    "road_13.0251_77.5853": {
+        "highway": "trunk",
+        "name": "Bellary Road",
+        "lanes": "3",
+        "maxspeed": "60"
+    },
+    "poi_13.0251_77.5853": [
+        {
+            "type": "college",
+            "name": "National Bureau of Agriculturally Important Insects"
+        },
+        {
+            "type": "hospital",
+            "name": "Dr. T.V.Ramesh Piles Hospital"
+        },
+        {
+            "type": "college",
+            "name": "ICAR - Indian Veterinary Research Institute, Hebbal"
+        }
+    ],
+    "road_12.9000_77.6755": {
+        "highway": "secondary",
+        "name": "Central Jail Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9000_77.6755": [
+        {
+            "type": "hospital",
+            "name": "Aarogya Hastha Hospital"
+        }
+    ],
+    "road_13.0178_77.5316": {
+        "highway": "tertiary",
+        "name": "3rd Cross Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_13.0178_77.5316": [],
+    "road_12.9790_77.6402": {
+        "highway": "secondary",
+        "name": "Chinmaya Mission Hospital Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9790_77.6402": [
+        {
+            "type": "college",
+            "name": "Kairalee Nikethan Education Trust"
+        },
+        {
+            "type": "school",
+            "name": "Holy Shepherd English High School"
+        },
+        {
+            "type": "school",
+            "name": "Spastics Society of Karnataka"
+        },
+        {
+            "type": "school",
+            "name": "Kairalee Nikethan Education Trust - Indiranagar Campus"
+        },
+        {
+            "type": "school",
+            "name": "Rhythms Institute of Fine Arts"
+        },
+        {
+            "type": "hospital",
+            "name": "Milann Fertility Center"
+        },
+        {
+            "type": "school",
+            "name": "Holy Shepherd English High School"
+        },
+        {
+            "type": "school",
+            "name": "Government Deaf and Dumb School"
+        }
+    ],
+    "road_13.0305_77.5365": {
+        "highway": "trunk",
+        "name": "Tumkur Road",
+        "lanes": "3",
+        "maxspeed": "60"
+    },
+    "poi_13.0305_77.5365": [
+        {
+            "type": "hospital",
+            "name": "KLE Dental College"
+        },
+        {
+            "type": "college",
+            "name": "Central Manufacturing Technology Institute"
+        }
+    ],
+    "road_12.9137_77.6065": {
+        "highway": "tertiary",
+        "name": "7th Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9137_77.6065": [
+        {
+            "type": "hospital",
+            "name": "Kids Care Clinic"
+        },
+        {
+            "type": "hospital",
+            "name": "Marigold Hospital"
+        },
+        {
+            "type": "school",
+            "name": "Sambhavam - Centre for Autism"
+        }
+    ],
+    "road_12.9253_77.6188": {
+        "highway": "primary",
+        "name": "Mahayogi Vemana Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9253_77.6188": [
+        {
+            "type": "hospital",
+            "name": "Venkateshwara Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Surya Diagnostics and Health Services"
+        },
+        {
+            "type": "school",
+            "name": "Sri Sathyanarayana HPS Madival"
+        },
+        {
+            "type": "school",
+            "name": "Khalsa Public LPS Madivala"
+        },
+        {
+            "type": "hospital",
+            "name": "Varalakshmi Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Chamundi Hi Tech Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Devi Hospital"
+        }
+    ],
+    "road_12.9081_77.6008": {
+        "highway": "primary",
+        "name": "Bannerghatta Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9081_77.6008": [
+        {
+            "type": "school",
+            "name": "Sri Balamuri Vidya Samste LPS, B T M Layout W No 65"
+        },
+        {
+            "type": "hospital",
+            "name": "Dr. Agarwal's Eye Hospital"
+        }
+    ],
+    "road_12.9876_77.7347": {
+        "highway": "tertiary",
+        "name": "Pattandur Agrahara Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    },
+    "poi_12.9876_77.7347": [
+        {
+            "type": "dancing_school",
+            "name": "Etram Dance Academy"
+        },
+        {
+            "type": "hospital",
+            "name": "Aster Women and Children Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Aster Whitefield Hospital"
+        }
+    ],
+    "poi_13.0219_77.5927": [
+        {
+            "type": "school",
+            "name": "Florence School"
+        }
+    ]
+}

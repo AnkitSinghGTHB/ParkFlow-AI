@@ -21,6 +21,11 @@ $$\text{TDI} = \frac{\text{Violation Count} \times \text{Road Classification Wei
 * **Lane Capacity Divider:** Blocking a single-lane road reduces throughput capacity to 0% (total gridlock), while a multi-lane road absorbs spillover. Dividing by lane count mathematically targets narrow bottleneck channels.
 * **POI Multiplier:** Multipliers scale priority based on proximity to critical municipal anchors—emergency hospital zones (1.5x) and metro/bus transit stations (1.3x).
 
+### 🔍 Spatial Data Analysis Note: The 61,543 Violation Top Hotspot
+A notable feature of the ASTraM police dataset is that the top-ranked hotspot (Hospital Road) contains **61,543 violations** (over 20% of the entire dataset). 
+* **Data-Collection Artifact:** This is a known data-collection artifact. Many urban traffic citation systems log incident coordinates using a fixed junction reference point (or closest police station reference marker) rather than precise per-incident GPS coordinates. When binning to 4 decimal places (approx. 50-meter bounding precision), thousands of historical records collapse into a single junction coordinate.
+* **Enforcement Handling:** ParkFlow AI's congestion engine prevents this spike from overwhelming resource planning by using a logarithmic capacity reduction formula ($C_{\text{reduced}}$) in the BPR model. This ensures that the tow-truck routing solver remains geographically balanced instead of getting trapped at a single junction.
+
 ---
 
 ## 2. Advanced Traffic Engineering: The Bureau of Public Roads (BPR) Delay Model

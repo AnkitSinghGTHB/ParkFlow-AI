@@ -40,81 +40,57 @@ def download_data():
                 f.write(chunk)
     print("Download completed and saved to cache.")
 
+HEADERS = {"User-Agent": "ParkFlowAI-Hackathon/1.0 (github.com/AnkitSinghGTHB/ParkFlow-AI)"}
+
 def get_osm_road_info(lat, lon):
-    """
-    Queries the OpenStreetMap Overpass API to get the closest highway features.
-    Caches the results locally.
-    """
     cache_key = f"road_{lat:.4f}_{lon:.4f}"
     if cache_key in osm_cache:
         return osm_cache[cache_key]
-
     url = "https://overpass-api.de/api/interpreter"
-    query = f"""
-    [out:json][timeout:15];
-    way(around:60, {lat}, {lon})[highway];
-    out tags;
-    """
-    try:
-        response = requests.post(url, data={'data': query}, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            if 'elements' in data and len(data['elements']) > 0:
-                elements = data['elements']
-                best_element = elements[0]
-                for el in elements:
-                    tags = el.get('tags', {})
-                    if 'name' in tags and tags.get('highway') in ['motorway', 'trunk', 'primary', 'secondary', 'tertiary']:
-                        best_element = el
-                        break
-                tags = best_element.get('tags', {})
-                info = {
-                    'highway': tags.get('highway', 'residential'),
-                    'name': tags.get('name', 'Unnamed Road'),
-                    'lanes': tags.get('lanes', '2'),
-                    'maxspeed': tags.get('maxspeed', '40')
-                }
-                osm_cache[cache_key] = info
-                return info
-    except Exception as e:
-        print(f"OSM Road query failed for ({lat}, {lon}): {e}")
-    
+    query = f"""[out:json][timeout:15];way(around:150,{lat},{lon})[highway];out tags;"""
+    for attempt in range(2):
+        try:
+            r = requests.post(url, data={'data': query}, headers=HEADERS, timeout=20)
+            if r.status_code == 200:
+                data = r.json()
+                if data.get('elements'):
+                    elements = data['elements']
+                    best = elements[0]
+                    for el in elements:
+                        tags = el.get('tags', {})
+                        if 'name' in tags and tags.get('highway') in ['motorway','trunk','primary','secondary','tertiary']:
+                            best = el
+                            break
+                    tags = best.get('tags', {})
+                    info = {'highway': tags.get('highway','residential'), 'name': tags.get('name','Unnamed Road'),
+                            'lanes': tags.get('lanes','2'), 'maxspeed': tags.get('maxspeed','40')}
+                    osm_cache[cache_key] = info
+                    return info
+            elif r.status_code == 429:
+                time.sleep(3)
+        except Exception as e:
+            print(f"Road query failed ({lat},{lon}) attempt {attempt+1}: {e}")
+        time.sleep(1)
     return {'highway': 'residential', 'name': 'Unnamed Road', 'lanes': '2', 'maxspeed': '40'}
 
 def get_poi_info(lat, lon):
-    """
-    Queries Overpass API for POIs (Hospitals, Metro Stations, Schools) within 200m.
-    Caches the results locally.
-    """
     cache_key = f"poi_{lat:.4f}_{lon:.4f}"
     if cache_key in osm_cache:
         return osm_cache[cache_key]
-
     url = "https://overpass-api.de/api/interpreter"
-    query = f"""
-    [out:json][timeout:15];
-    (
-      node(around:200, {lat}, {lon})[amenity~"hospital|school|university|college|bus_station|subway_station|mall"];
-      way(around:200, {lat}, {lon})[amenity~"hospital|school|university|college|bus_station|subway_station|mall"];
-    );
-    out tags;
-    """
-    try:
-        response = requests.post(url, data={'data': query}, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            pois = []
-            if 'elements' in data:
-                for el in data['elements']:
-                    tags = el.get('tags', {})
-                    amenity = tags.get('amenity', 'poi')
-                    name = tags.get('name', 'Unnamed POI')
-                    pois.append({'type': amenity, 'name': name})
-            osm_cache[cache_key] = pois
-            return pois
-    except Exception as e:
-        print(f"OSM POI query failed for ({lat}, {lon}): {e}")
-    
+    query = f"""[out:json][timeout:15];(node(around:250,{lat},{lon})[amenity~"hospital|school|university|college|bus_station|subway_station|mall"];way(around:250,{lat},{lon})[amenity~"hospital|school|university|college|bus_station|subway_station|mall"];);out tags;"""
+    for attempt in range(2):
+        try:
+            r = requests.post(url, data={'data': query}, headers=HEADERS, timeout=20)
+            if r.status_code == 200:
+                pois = [{'type': el.get('tags',{}).get('amenity','poi'), 'name': el.get('tags',{}).get('name','Unnamed POI')} for el in r.json().get('elements', [])]
+                osm_cache[cache_key] = pois
+                return pois
+            elif r.status_code == 429:
+                time.sleep(3)
+        except Exception as e:
+            print(f"POI query failed ({lat},{lon}) attempt {attempt+1}: {e}")
+        time.sleep(1)
     return []
 
 def preprocess_and_cluster():
@@ -195,10 +171,12 @@ def preprocess_and_cluster():
             summary_str = "None"
         poi_details.append(summary_str)
         
+        print(f"[{len(roads)}/60] Lat: {lat:.4f}, Lon: {lon:.4f} | Road: {road_info['name']} ({road_info['highway']}, {road_info['lanes']} lanes) | POIs: {len(pois)}")
+        
         # Sleep to be polite to Overpass (if not hit cache)
         # If cache hit, get_osm_road_info takes 0s, so we only sleep if querying
         # We can just do a tiny sleep
-        time.sleep(0.1)
+        time.sleep(0.3)
 
     save_cache()
 
