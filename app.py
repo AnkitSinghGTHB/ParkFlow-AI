@@ -7,6 +7,7 @@ import pydeck as pdk
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
+import requests
 
 # Page Configuration
 st.set_page_config(
@@ -270,6 +271,30 @@ def calculate_bpr_delay(violations_count, lanes, highway_type, maxspeed, clearan
     vehicle_hours_lost = (delay_per_vehicle / 60.0) * v
     return vehicle_hours_lost
 
+def get_osrm_route(coords):
+    """
+    Query public OSRM API to get driving route geometry along roads.
+    coords: list of (lat, lon) tuples
+    Returns: list of [lon, lat] coordinates representing the road path, or None
+    """
+    coord_str = ";".join([f"{lon},{lat}" for lat, lon in coords])
+    
+    # Try openstreetmap.de OSRM server first (more stable)
+    url_osm = f"https://routing.openstreetmap.de/routed-car/route/v1/driving/{coord_str}?overview=full&geometries=geojson"
+    # Fallback OSRM server
+    url_osrm = f"http://router.project-osrm.org/route/v1/driving/{coord_str}?overview=full&geometries=geojson"
+    
+    for url in [url_osm, url_osrm]:
+        try:
+            r = requests.get(url, timeout=3)
+            if r.status_code == 200:
+                res = r.json()
+                if 'routes' in res and len(res['routes']) > 0:
+                    return res['routes'][0]['geometry']['coordinates']
+        except Exception as e:
+            pass
+    return None
+
 # Calculate local predictions per hotspot (Coordinates based)
 current_month = datetime.now().month
 if predictor_model is not None:
@@ -417,18 +442,42 @@ with tab_map:
             
         route_df = pd.DataFrame(route_data)
         
-        # 1. Draw route connection lines
-        layers.append(
-            pdk.Layer(
-                "LineLayer",
-                route_df,
-                get_source_position=["start_lon", "start_lat"],
-                get_target_position=["end_lon", "end_lat"],
-                get_color=[240, 82, 82, 255], # Solid Red route line
-                get_width=4,
-                pickable=True
+        # 1. Fetch real driving route geometry along roads via OSRM
+        coords_sequence = [(start_coords[0], start_coords[1])]
+        for row in route_data:
+            coords_sequence.append((row['end_lat'], row['end_lon']))
+            
+        road_coordinates = get_osrm_route(coords_sequence)
+        
+        if road_coordinates:
+            path_df = pd.DataFrame([{
+                'path': road_coordinates,
+                'color': [240, 82, 82, 230] # Soft red route line
+            }])
+            layers.append(
+                pdk.Layer(
+                    "PathLayer",
+                    path_df,
+                    get_path="path",
+                    get_color="color",
+                    width_scale=15,
+                    width_min_pixels=3,
+                    pickable=False
+                )
             )
-        )
+        else:
+            # Fallback to straight LineLayer if OSRM is offline
+            layers.append(
+                pdk.Layer(
+                    "LineLayer",
+                    route_df,
+                    get_source_position=["start_lon", "start_lat"],
+                    get_target_position=["end_lon", "end_lat"],
+                    get_color=[240, 82, 82, 200],
+                    get_width=3,
+                    pickable=True
+                )
+            )
         
         # 2. Draw starting police station marker
         station_df = pd.DataFrame([{
@@ -448,19 +497,19 @@ with tab_map:
             )
         )
         
-        # 3. Draw text labels for the path sequence
+        # 3. Draw text labels for the path sequence (Uncluttered & Clean)
         text_data = [{
-            'lat': start_coords[0] + 0.0008, # Offset slightly north to avoid overlapping dot
+            'lat': start_coords[0],
             'lon': start_coords[1],
-            'text': f"🚨 START: {start_station}",
+            'text': "★ START",
             'color': [59, 130, 246, 255]
         }]
         for idx, row in route_df.iterrows():
             text_data.append({
-                'lat': row['end_lat'] + 0.0008, # Offset slightly north
+                'lat': row['end_lat'],
                 'lon': row['end_lon'],
-                'text': f"📌 STOP {idx+1}: {row['name']}",
-                'color': [240, 82, 82, 255]
+                'text': f"Stop {idx+1}",
+                'color': [255, 255, 255, 255] # Clean White for visibility
             })
         text_df = pd.DataFrame(text_data)
         
@@ -470,10 +519,11 @@ with tab_map:
                 text_df,
                 get_position=["lon", "lat"],
                 get_text="text",
-                get_size=15,
+                get_size=13,
                 get_color="color",
+                get_pixel_offset=[0, -14],
                 get_alignment_baseline="'bottom'",
-                get_angle=0,
+                get_text_anchor="'middle'",
                 pickable=False
             )
         )
@@ -509,11 +559,18 @@ with tab_map:
 
     # Render Dispatch Route Summary if enabled
     if enable_routing and not route_df.empty:
-        st.markdown(f"### 📍 Dispatch Route Path ({start_station} Start)")
-        route_text = f"**Start** ({start_station})"
+        st.markdown(f"#### 📍 Optimized Dispatch Itinerary ({start_station} Start)")
+        
+        # Build timeline using clean, styled markdown blocks
+        timeline_md = f"🔵 **Start Station:** `{start_station}`  \n"
         for idx, row in route_df.iterrows():
-            route_text += f" ➡️ **Stop {idx+1}**: {row['name']}"
-        st.markdown(route_text)
+            timeline_md += f"🔴 **Stop {idx+1}:** `{row['name']}`  \n"
+        
+        st.markdown(f"""
+        <div class="bold-card" style="border-left: 2px solid #30363d; padding-left: 1rem; margin-top: 0.5rem;">
+            {timeline_md}
+        </div>
+        """, unsafe_allow_html=True)
 
     # Show secondary violations correlation if selected
     if overlay_other:
