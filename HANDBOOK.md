@@ -1,26 +1,25 @@
-# ParkFlow AI: Technical Handbook & Engineering Walkthrough
+# ParkFlow AI: Technical Walkthrough & Engineering Handbook
 
-This document details the engineering architecture, mathematical formulations, spatial data pipelines, and operational frameworks driving ParkFlow AI.
+This handbook details the engineering architecture, mathematical models, and operational frameworks driving ParkFlow AI.
 
 ---
 
 ## 1. The Core Philosophy (Why ParkFlow AI Wins)
 
-Most software interventions in urban mobility suffer from the **"Heatmap Trap"**—they ingest historical violation logs, run spatial clustering, and draw static heatmaps indicating where infractions are frequent.
+Most software interventions in urban mobility suffer from the **"Heatmap Trap"**—they ingest historical violation logs, run spatial clustering, and draw a static heatmap indicating where infractions are frequent.
 
 However, enforcement agencies like the **Bengaluru Traffic Police (ASTraM)** already know where hotspots are. The missing operational intelligence lies in answering:
 * Which specific structural violations cause the most severe, cascading network choke-points?
 * How can deployment resources (tow-trucks, patrol units) be dynamically routed in real-time based on predictive traffic disruption?
 
 ### The Core Metric: Traffic Disruption Index (TDI)
-
 ParkFlow AI shifts focus from frequency to severity by calculating a custom network-aware score for each hotspot:
 
 $$\text{TDI} = \frac{\text{Violation Count} \times \text{Road Classification Weight}}{\text{Number of Lanes}} \times \text{POI Proximity Multiplier}$$
 
-* **Road Class Weight:** Blocking primary arterials (3.5x weight) causes structural gridlock, whereas residential lanes (1.0x) absorb spillover with less systemic impact.
-* **Lane Capacity:** A 1-lane road blocked by a parked vehicle reduces carrying capacity to 0% (total gridlock). A 4-lane road allows traffic to squeeze past. Dividing by the lane count mathematically prioritizes narrow bottleneck corridors.
-* **POI Multiplier:** Proximity (within 200m) to critical infrastructure acts as a risk multiplier—emergency medical zones (hospitals = 1.5x) and high-density public transit hubs (metro/bus stations = 1.3x) scale the priority response curve.
+* **Road Class Weight:** Higher weights for major corridors (Motorway/Primary = 3.5x) where blocks cause cascading regional slowdowns, compared to residential streets (1.0x).
+* **Lane Capacity Divider:** Blocking a single-lane road reduces throughput capacity to 0% (total gridlock), while a multi-lane road absorbs spillover. Dividing by lane count mathematically targets narrow bottleneck channels.
+* **POI Multiplier:** Multipliers scale priority based on proximity to critical municipal anchors—emergency hospital zones (1.5x) and metro/bus transit stations (1.3x).
 
 ---
 
@@ -33,20 +32,19 @@ $$T_{\text{congested}} = T_{\text{free}} \times \left( 1 + 0.15 \times \left( \f
 ### Algorithmic Execution in `app.py`:
 
 1. **Free-Flow Time ($T_{\text{free}}$):** Extracted systematically from OpenStreetMap `maxspeed` tags over a normalized 1 km segment corridor:
-
-$$T_{\text{free}} = \frac{1}{\text{maxspeed}} \times 60 \text{ minutes}$$
+   $$T_{\text{free}} = \frac{1}{\text{maxspeed}} \times 60 \text{ minutes}$$
 
 2. **Traffic Volume ($V$):** Modeled dynamically using empirical urban baseline flows scaled by road tier classification (Primary = 1200 vehicles/hr per lane, Secondary = 800, Tertiary = 500, Residential = 200).
-3. **Logarithmic Capacity Reduction ($C_{\text{reduced}}$):** Standard lane capacity is benchmarked at 1500 vehicles/hour per lane. An active parking violation blocks a portion of the road. We scale the blocked capacity logarithmically based on predicted violation accumulation:
 
-$$\text{blocked\_lanes} = \min\left(1.0, \frac{\log(1 + \text{count})}{2}\right)$$
+3. **Logarithmic Capacity Reduction ($C_{\text{reduced}}$):**
+   Standard lane capacity is benchmarked at 1500 vehicles/hour per lane. An active parking violation blocks a portion of the road. We scale the blocked capacity logarithmically based on predicted violation accumulation:
+   $$\text{blocked\_lanes} = \min\left(1.0, \frac{\log(1 + \text{count})}{2}\right)$$
+   
+   > **The Logarithmic Rationale:** We implement a logarithmic constraint to model diminishing marginal disruption. The first two illegally parked vehicles cause a massive initial layout bottleneck; subsequent vehicles parking behind them create a longer line but do not proportionally block *additional* lanes.
 
-> **The Logarithmic Rationale:** We implement a logarithmic constraint to model diminishing marginal disruption. The first two illegally parked vehicles cause a massive initial layout bottleneck; subsequent vehicles parking behind them create a longer line but do not proportionally block *additional* lanes.
-
-$$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
+   $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
 
 ### Macroeconomic & Climate Quantifications:
-
 * **Commuter Delay Saved:** Evaluated as $\text{Delay} = (T_{\text{congested}} - T_{\text{free}}) \times V$ summed across all active hotspots.
 * **Economic Value Recaptured:** Evaluated at **₹250 per hour**, reflecting the combined loss of local productivity, corporate delay, and fleet idling fuel waste in Bengaluru traffic.
 * **Supply Chain/Last-Mile Delivery SLA Protection:** Quantifies the mitigation of delivery delays, protecting critical operational windows for hyper-local fulfillment networks.
@@ -84,8 +82,7 @@ $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
 ```
 
 ### The Tech Stack
-
-* **UI & Dashboard Engine:** Streamlit (Clean, unboxed dark theme layout).
+* **UI & Dashboard Engine:** Streamlit (clean, unboxed dark theme layout).
 * **Geospatial Visualization:** Pydeck (High-performance WebGL rendering for spatial scatterplots and route vectors) over a CartoDB Dark Matter keyless open basemap.
 * **Analytical Matrix Computations:** Pandas and NumPy.
 * **Machine Learning Framework:** Scikit-Learn (Random Forest Regressor).
@@ -96,26 +93,23 @@ $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
 ## 4. Operational Code Execution Under the Hood
 
 ### Step A: Data Preprocessing & Localized Caching (`preprocess.py`)
-
 * **Spatial Filtering:** Ingests and cleans the 298k row ASTraM dataset, isolating bounding boxes to the geographic limits of Bengaluru.
 * **DBSCAN Clustering:** Groups historical coordinates within a strict 50-meter radius epsilon. Low-frequency spatial noise is automatically pruned.
 * **OSM Enrichment & Network Memoization:** For the top 60 identified hotspot vectors, the pipeline queries OpenStreetMap to resolve road metadata (class, lane configurations) and POIs within 200 meters.
 * **Local Cache Layer (`data/osm_cache.json`):** To circumvent Overpass API rate limits and avoid blocking execution loops during evaluation, all raw API network responses are stored in a local JSON cache, bringing subsequent hot-reloads down to sub-millisecond speeds.
 
 ### Step B: Spatial Machine Learning Pipeline (`model.py`)
-
 * **Predictive Framework:** Trains a highly granular ensemble regressor to forecast hyper-local, hour-by-hour violation spikes.
 * **Feature Engineering:** Features include `center_lat`, `center_lon`, `month`, `day_of_week`, and `hour`. The model targets the `violation_count`.
 * **Model Validation:** Evaluates with a robust Mean Absolute Error (MAE) of **6.19 violations/hour** per individual hotspot.
 
 ### Step C: Route Optimization & Map Rendering (`app.py`)
-
 * **Predictive Surge Aggregator:** Computes the current hour's predictive violation vector for all active nodes, sorting them automatically by total TDI impact.
 * **Priority-Weighted Nearest-Neighbor TSP Heuristic:** Calculates the most efficient deployment path starting from a selected base (e.g., Cubbon Park Traffic Police Station) to navigate through active top-priority bottlenecks without backtracking.
 * **Multi-Layer Pydeck Visuals:**
-  * `ScatterplotLayer`: Renders hotspots dynamically scaled by violation density and color-coded by TDI severity boundaries (Red = Critical, Orange = High, Yellow = Moderate).
-  * `PathLayer` (OSRM): Traces proper routes along actual roads and streets by querying OSRM driving geometries.
-  * `TextLayer`: Overlays simplified, pixel-offset labels showing the stop sequence clearly.
+  - `ScatterplotLayer`: Renders hotspots dynamically scaled by violation density and color-coded by TDI severity boundaries (Red = Critical, Orange = High, Yellow = Moderate).
+  - `PathLayer` (OSM Road Route): Traces proper routes along actual roads (using openstreetmap.de OSRM API) instead of drawing straight lines.
+  - `TextLayer`: Overlays white visual indicators ("★ START", "Stop 1", etc.) above the circles with a clean pixel offset.
 
 ---
 
@@ -137,9 +131,9 @@ $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
   * *Issue:* Pydeck’s default Mapbox base style required a remote `MAPBOX_API_KEY`, causing the mapping layer to load as a blank black canvas on fresh machines.
   * *Fix:* Migrated the map style token configuration from `"mapbox://styles/mapbox/dark-v9"` to `"dark"`. This reroutes the engine to use Pydeck’s native, open-source CartoDB Dark Matter tileset, achieving zero-config rendering instantly.
 
-* 🛠️ **Pydeck Tooltip Raw Template Rendering Bug**
-  * *Issue:* Browser displayed raw placeholders like `{cluster_id}` and `{predicted_count:.1f}` when hovering over elements.
-  * *Fix:* Pre-formatted float variables into clean strings inside the Python backend first (`predicted_count_str`, `tdi_str`, etc.) and set secondary map markers (police station node and route path) to `pickable=False` to prevent global tooltip triggers on incomplete schemas.
+* 🛠️ **Pydeck Tooltip Raw Template Rendering Bug:**
+  * *Issue:* Deck.gl's client-side JavaScript template engine parsed Python-style formatting (e.g., `{predicted_count:.1f}`) as raw text, showing raw curly braces.
+  * *Fix:* Formatted columns into strings in Python first (e.g. `predicted_count_str`) and updated tooltip templates to refer to these clean variables. Set pickable to False on secondary layers.
 
 ---
 
@@ -147,7 +141,7 @@ $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
 
 | Slide Number | Slide Title | Key Presenting Narrative |
 | :---: | :--- | :--- |
-| **1** | Title & Hook | **ParkFlow AI:** Prioritized Enforcement & Dispatch Optimization Pipelines. |
+| **1** | Title & Framework | **ParkFlow AI:** Prioritized Enforcement & Dispatch Optimization Pipelines. |
 | **2** | The Problem | Traditional enforcement tracks absolute violation volume, treating an obstruction in a residential alleyway identically to an arterial road block. |
 | **3** | The Solution (TDI) | Introducing the **Traffic Disruption Index (TDI)**. We mathematically weigh violations by structural lane capacity, network road class, and critical POI (hospital) proximity. |
 | **4** | BPR Traffic Physics | Validating heuristic priority using the **Bureau of Public Roads (BPR) delay model**, mapping raw infractions directly into commuter-minutes and vehicle-hours lost. |
