@@ -332,6 +332,13 @@ for idx, row in hotspots_df.iterrows():
 hotspots_df['bpr_delay_unresolved'] = individual_delays
 hotspots_df['bpr_economic_loss_unresolved'] = individual_economic_losses
 
+# Formatted string columns for the Pydeck tooltip (resolves Deck.gl JS rendering bug)
+hotspots_df['predicted_count_str'] = hotspots_df['predicted_count'].apply(lambda x: f"{x:.1f}")
+hotspots_df['two_wheeler_pct_str'] = hotspots_df['two_wheeler_pct'].apply(lambda x: f"{x:.1f}")
+hotspots_df['tdi_str'] = hotspots_df['tdi'].apply(lambda x: f"{x:,.1f}")
+hotspots_df['bpr_delay_unresolved_str'] = hotspots_df['bpr_delay_unresolved'].apply(lambda x: f"{x:.1f}")
+hotspots_df['bpr_economic_loss_unresolved_str'] = hotspots_df['bpr_economic_loss_unresolved'].apply(lambda x: f"{x:,.0f}")
+
 delay_hours_saved = total_delay_base - total_delay_enforced
 economic_savings = delay_hours_saved * 250.0  # ₹250/hr average delay cost in Bengaluru
 co2_saved = delay_hours_saved * 0.42  # 0.42 kg CO2 per vehicle-hour saved
@@ -475,7 +482,7 @@ with tab_map:
                     get_target_position=["end_lon", "end_lat"],
                     get_color=[240, 82, 82, 200],
                     get_width=3,
-                    pickable=True
+                    pickable=False
                 )
             )
         
@@ -492,7 +499,7 @@ with tab_map:
                 get_position=["lon", "lat"],
                 get_fill_color=[59, 130, 246, 255], # Bright Blue
                 get_radius=180, # Distinct police station circle size
-                pickable=True,
+                pickable=False,
                 auto_highlight=True
             )
         )
@@ -546,12 +553,12 @@ with tab_map:
                     "<b>Road Name:</b> {name}<br/>"
                     "<b>Class:</b> {highway}<br/>"
                     "<b>Lanes:</b> {lanes}<br/>"
-                    "<b>Predicted Violations:</b> {predicted_count:.1f}<br/>"
-                    "<b>Two-Wheelers:</b> {two_wheeler_pct:.1f}%<br/>"
+                    "<b>Predicted Violations:</b> {predicted_count_str}<br/>"
+                    "<b>Two-Wheelers:</b> {two_wheeler_pct_str}%<br/>"
                     "<b>POIs (200m):</b> {poi_details}<br/>"
-                    "<b>Disruption Index (TDI):</b> {tdi:,.1f}<br/>"
-                    "<b>Est. Delay if Unresolved:</b> {bpr_delay_unresolved:.1f} vehicle-hours<br/>"
-                    "<b>Est. Economic Loss:</b> ₹{bpr_economic_loss_unresolved:,.0f}",
+                    "<b>Disruption Index (TDI):</b> {tdi_str}<br/>"
+                    "<b>Est. Delay if Unresolved:</b> {bpr_delay_unresolved_str} vehicle-hours<br/>"
+                    "<b>Est. Economic Loss:</b> ₹{bpr_economic_loss_unresolved_str}",
             "style": {"backgroundColor": "#161b22", "color": "white", "borderColor": "#30363d", "borderWidth": "1px"}
         }
     )
