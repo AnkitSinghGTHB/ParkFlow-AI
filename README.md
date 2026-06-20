@@ -1,59 +1,68 @@
-# ParkFlow AI: Project Handbook & Submission Guide
+# ParkFlow AI: Predictive Priority Enforcement & Traffic-Impact Quantification Engine
 
-Welcome, Project Reviewer! This handbook details the engineering architecture, mathematical models, and operational frameworks driving ParkFlow AI.
+[![Streamlit App](https://img.shields.io/badge/Demo-Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)](http://localhost:8501)
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![OSM Infrastructure](https://img.shields.io/badge/Data-OpenStreetMap-7FC857?style=flat&logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/)
+[![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+
+ParkFlow AI is a predictive traffic enforcement and capacity quantification dashboard designed for the **Bengaluru Traffic Police (ASTraM)** and the **Flipkart Gridlock Hackathon**. It shifts the operational paradigm from raw infraction counting (heatmaps) to real-time, network-aware traffic delay quantification and optimal resource dispatch.
 
 ---
 
-## 1. The Core Philosophy (Why ParkFlow AI Wins)
+## 📸 Dashboard Interface Showcase
 
-Most software interventions in urban mobility suffer from the **"Heatmap Trap"**—they ingest historical violation logs, run spatial clustering, and draw a static heatmap indicating where infractions are frequent.
+### Live Dispatch & Network Disruption Map
+The dashboard provides real-time predictions and optimal enforcement routes using pydeck map layers. It features an **Action Recommendation Card** displaying exact tow-truck instructions.
+![Live Dashboard Map & Action Card](screenshots/dashboard_home.png)
 
-However, enforcement agencies like the **Bengaluru Traffic Police (ASTraM)** already know where hotspots are. The missing operational intelligence lies in answering:
-* Which specific structural violations cause the most severe, cascading network choke-points?
-* How can deployment resources (tow-trucks, patrol units) be dynamically routed in real-time based on predictive traffic disruption?
+### Model Validation against TomTom Speed-Drops
+Validation tab comparing the TDI score to empirical traffic speed drops across key Bengaluru corridors.
+![TomTom Speed-Drop Validation](screenshots/model_validation.png)
 
-### The Core Metric: Traffic Disruption Index (TDI)
-ParkFlow AI shifts focus from frequency to severity by calculating a custom network-aware score for each hotspot:
+### What-If Hotspot Clearance Sandbox
+An interactive, microscopically simulated sandbox where dragging the slider dynamically updates delay saved using standard transportation engineering equations.
+![What-If Clearance Sandbox](screenshots/whatif_sandbox.png)
+
+---
+
+## 💡 1. The Core Philosophy (Why ParkFlow AI Wins)
+
+Traditional mobility interventions fall into the **"Heatmap Trap"**—they highlight historical violation frequency but fail to calculate systemic road network disruption. 
+
+ParkFlow AI prioritizes enforcement using the **Traffic Disruption Index (TDI)**, evaluating the structural cost of every active blockage:
 
 $$\text{TDI} = \frac{\text{Violation Count} \times \text{Road Classification Weight}}{\text{Number of Lanes}} \times \text{POI Proximity Multiplier}$$
 
-* **Road Class Weight**: Blocking primary arterials (3.5x weight) causes structural gridlock, whereas residential lanes (1.0x) absorb spillover with less systemic impact.
-* **Lane Capacity**: A 1-lane road blocked by a parked vehicle reduces carrying capacity to 0% (total gridlock). A 4-lane road allows traffic to squeeze past. Dividing by the lane count mathematically prioritizes narrow bottleneck corridors.
-* **POI Multiplier**: Proximity (within 200m) to critical infrastructure acts as a risk multiplier—emergency medical zones (hospitals = 1.5x) and high-density public transit hubs (metro/bus stations = 1.3x) scale the priority response curve.
+* **Road Class Weight:** Higher weights for major corridors (Motorway/Primary = 3.5x) where blocks cause cascading regional slowdowns, compared to residential streets (1.0x).
+* **Lane Capacity Divider:** Blocking a single-lane road reduces throughput capacity to 0% (total gridlock), while a multi-lane road absorbs spillover. Dividing by lane count mathematically targets narrow bottleneck channels.
+* **POI Multiplier:** Multipliers scale priority based on proximity to critical municipal anchors—emergency hospital zones (1.5x) and metro/bus transit stations (1.3x).
 
 ---
 
-## 2. Advanced Traffic Engineering: The Bureau of Public Roads (BPR) Delay Model
+## 📈 2. Advanced Traffic Engineering: The BPR Delay Model
 
-To rigorously validate the TDI heuristic, the backend integrates the industry-standard **Bureau of Public Roads (BPR) travel time function** to compute real-time delay metrics in commuter-minutes and vehicle-hours:
+To back the TDI heuristic with validated mathematics, the backend integrates the **Bureau of Public Roads (BPR) travel time function**:
 
 $$T_{\text{congested}} = T_{\text{free}} \times \left( 1 + 0.15 \times \left( \frac{V}{C_{\text{reduced}}} \right)^4 \right)$$
 
-### Algorithmic Execution in `app.py`:
+### Algorithmic Pipeline:
 
-1. **Free-Flow Time ($T_{\text{free}}$):** Extracted systematically from OpenStreetMap `maxspeed` tags over a normalized 1 km segment corridor:
+1. **Free-Flow Time ($T_{\text{free}}$):** Dynamically derived from OpenStreetMap tags on a normalized 1 km corridor:
+   $$T_{\text{free}} = \frac{1}{\text{maxspeed}} \times 60 \text{ minutes}$$
+2. **Commuter Volume ($V$):** Estimated using standard urban road tier capacity baselines (Primary = 1200 veh/hr/lane, Secondary = 800, Tertiary = 500, Residential = 200).
+3. **Logarithmic Capacity Reduction ($C_{\text{reduced}}$):**
+   $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
+   $$\text{blocked\_lanes} = \min\left(1.0, \frac{\log(1 + \text{count})}{2}\right)$$
+   * *Logarithmic Rationale:* Models diminishing marginal disruption. The first two cars create the physical layout bottleneck; subsequent vehicles lining up behind them extend the physical queue but do not block additional travel lanes.
 
-$$T_{\text{free}} = \frac{1}{\text{maxspeed}} \times 60 \text{ minutes}$$
-
-2. **Traffic Volume ($V$):** Modeled dynamically using empirical urban baseline flows scaled by road tier classification (Primary = 1200 vehicles/hr per lane, Secondary = 800, Tertiary = 500, Residential = 200).
-3. **Logarithmic Capacity Reduction ($C_{\text{reduced}}$):** Standard lane capacity is benchmarked at 1500 vehicles/hour per lane. An active parking violation blocks a portion of the road. We scale the blocked capacity logarithmically based on predicted violation accumulation:
-
-$$\text{blocked\_lanes} = \min\left(1.0, \frac{\log(1 + \text{count})}{2}\right)$$
-
-> **The Logarithmic Rationale:** We implement a logarithmic constraint to model diminishing marginal disruption. The first two illegally parked vehicles cause a massive initial layout bottleneck; subsequent vehicles parking behind them create a longer line but do not proportionally block *additional* lanes.
-
-$$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
-
-### Macroeconomic & Climate Quantifications:
-
-* **Commuter Delay Saved:** Evaluated as $\text{Delay} = (T_{\text{congested}} - T_{\text{free}}) \times V$ summed across all active hotspots.
-* **Economic Value Recaptured:** Evaluated at **₹250 per hour**, reflecting the combined loss of local productivity, corporate delay, and fleet idling fuel waste in Bengaluru traffic.
-* **Supply Chain/Last-Mile Delivery SLA Protection:** Quantifies the mitigation of delivery delays, protecting critical operational windows for hyper-local fulfillment networks.
-* **CO₂ Emission Reduction:** Evaluated at **0.42 kg of CO₂ saved** per vehicle-hour of reduced congestion.
+### Systemic Economic and Environmental Impact:
+* **Commuter Delay Saved:** $\text{Delay} = (T_{\text{congested}} - T_{\text{free}}) \times V$ summed over active hotspots.
+* **Economic Value Saved:** Evaluated at **₹250/hour**, reflecting average commuter productivity loss and commercial cargo delay.
+* **CO₂ Reduction:** Estimated at **0.42 kg of CO₂ saved** per vehicle-hour of reduced congestion.
 
 ---
 
-## 3. Technical Architecture & Data Pipeline
+## ⚙️ 3. Technical Architecture & Pipeline
 
 ```
 [Raw ASTraM Police Logs]
@@ -83,99 +92,82 @@ $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
 ```
 
 ### The Tech Stack
-* **UI & Dashboard Engine:** Streamlit (Clean, unboxed dark theme layout).
-* **Geospatial Visualization:** Pydeck (High-performance WebGL rendering for spatial scatterplots and route vectors) over a CartoDB Dark Matter keyless open basemap.
-* **Analytical Matrix Computations:** Pandas and NumPy.
-* **Machine Learning Framework:** Scikit-Learn (Random Forest Regressor).
-* **Geospatial Microservices:** OpenStreetMap Overpass REST API (via Python `requests`).
+* **Dashboard Engine:** Streamlit (clean, unboxed dark layout).
+* **Geospatial Map Canvas:** Pydeck (WebGL rendering) with open-source CartoDB Dark Matter tilesets.
+* **Data Core:** Pandas and NumPy.
+* **Predictive Analytics:** Scikit-Learn (Random Forest Regressor).
+* **Infrastructure Queries:** OpenStreetMap Overpass REST API.
 
 ---
 
-## 4. Operational Code Execution Under the Hood
+## 🏗️ 4. Codebase Organization
 
-### Step A: Data Preprocessing & Localized Caching (`preprocess.py`)
-* **Spatial Filtering:** Ingests and cleans the 298k row ASTraM dataset, isolating bounding boxes to the geographic limits of Bengaluru.
-* **DBSCAN Clustering:** Groups historical coordinates within a strict 50-meter radius epsilon. Low-frequency spatial noise is automatically pruned.
-* **OSM Enrichment & Network Memoization:** For the top 60 identified hotspot vectors, the pipeline queries OpenStreetMap to resolve road metadata (class, lane configurations) and POIs within 200 meters.
-* **Local Cache Layer (`data/osm_cache.json`):** To circumvent Overpass API rate limits and avoid blocking execution loops during evaluation, all raw API network responses are stored in a local JSON cache, bringing subsequent hot-reloads down to sub-millisecond speeds.
-
-### Step B: Spatial Machine Learning Pipeline (`model.py`)
-* **Predictive Framework:** Trains a highly granular ensemble regressor to forecast hyper-local, hour-by-hour violation spikes.
-* **Feature Engineering:** Features include `center_lat`, `center_lon`, `month`, `day_of_week`, and `hour`. The model targets the `violation_count`.
-* **Model Validation:** Evaluates with a robust Mean Absolute Error (MAE) of **6.19 violations/hour** per individual hotspot.
-
-### Step C: Route Optimization & Map Rendering (`app.py`)
-* **Predictive Surge Aggregator:** Computes the current hour's predictive violation vector for all active nodes, sorting them automatically by total TDI impact.
-* **Priority-Weighted Nearest-Neighbor TSP Heuristic:** Calculates the most efficient deployment path starting from a selected base (e.g., Cubbon Park Traffic Police Station) to navigate through active top-priority bottlenecks without backtracking.
-* **Multi-Layer Pydeck Visuals:**
-  - `ScatterplotLayer`: Renders hotspots dynamically scaled by violation density and color-coded by TDI severity boundaries (Red = Critical, Orange = High, Yellow = Moderate).
-  - `LineLayer`: Overlays the optimized real-time dispatch vector for enforcement vehicles.
+* **`preprocess.py`:** Cleans the 298k row raw dataset, executes DBSCAN clustering to identify core spatial hotspots, fetches road configs and POIs from OSM, computes the TDI, and saves binned coords. Memoizes OSM calls in `data/osm_cache.json` to prevent API rate-limiting.
+* **`model.py`:** Trains a Random Forest regressor on spatial coordinates (`center_lat`, `center_lon`) and temporal features (`month`, `day_of_week`, `hour`) to predict hourly violation spikes. Saves the serialized model to `data/predictor.pkl`.
+* **`app.py`:** Renders the dashboard, calculates active BPR travel times, runs the priority TSP routing solver, shows rank-shifts, correlates secondary offences, and runs the "What-If" clearance simulator.
 
 ---
 
-## 5. Engineering Hurdles & Resolutions (Where We Got Stuck)
+## 🛠️ 5. Installation & Execution
 
-* 🛠️ **The Machine Learning "cluster_id" Splitting Bug**
-  * *Issue:* The pipeline originally passed `cluster_id` as a raw numeric feature. Because decision-tree ensembles treat integers as continuous values, the model attempted to split on arbitrary values (e.g., `cluster_id <= 25.5`). This introduced major spatial nonsense because the IDs were merely sequential array indices.
-  * *Fix:* Dropped `cluster_id` and explicitly refactored the feature matrix to rely on `center_lat` and `center_lon`. The Random Forest now splits on geographic coordinates logically, creating spatial bounding boxes representing actual physical neighborhoods.
+### Prerequisites
+* Python 3.9 or higher
 
-* 🛠️ **DateTime Format Variance Exception**
-  * *Issue:* `pandas.to_datetime` crashed unexpectedly during execution due to floating fractional seconds within incoming timestamp vectors (e.g., `.022782+00`).
-  * *Fix:* Configured `format='ISO8601'` explicitly inside the I/O parser, forcing Pandas to drop native regex loops and leverage its optimized internal C-based ISO parser.
+### Steps
 
-* 🛠️ **Stale Memory Polling via Streamlit Cache**
-  * *Issue:* When retraining the predictive model or changing the underlying training parameters, the frontend visualization persistently served outdated model architectures, triggering a `ValueError`.
-  * *Fix:* Discovered that `@st.cache_resource` was pinning the initial un-pickled model instance directly in the application's warm in-memory layer. Removed the global decorator to force clean disk-level re-polling on user execution.
-
-* 🛠️ **Blank Map Canvas (Token Auth Failures)**
-  * *Issue:* Pydeck’s default Mapbox base style required a remote `MAPBOX_API_KEY`, causing the mapping layer to load as a blank black canvas on fresh machines.
-  * *Fix:* Migrated the map style token configuration from `"mapbox://styles/mapbox/dark-v9"` to `"dark"`. This reroutes the engine to use Pydeck’s native, open-source CartoDB Dark Matter tileset, achieving zero-config rendering instantly.
-
----
-
-## 6. Submission Evaluation & Pitch Blueprint
-
-| Slide Number | Slide Title | Key Presenting Narrative |
-| :--- | :--- | :--- |
-| **1** | Title & Framework | **ParkFlow AI:** Prioritized Enforcement & Dispatch Optimization Pipelines. |
-| **2** | The Problem | Traditional enforcement tracks absolute violation volume, treating an obstruction in a residential alleyway identically to an arterial road block. |
-| **3** | The Solution (TDI) | Introducing the **Traffic Disruption Index (TDI)**. We mathematically weigh violations by structural lane capacity, network road class, and critical POI (hospital) proximity. |
-| **4** | BPR Traffic Physics | Validating heuristic priority using the **Bureau of Public Roads (BPR) delay model**, mapping raw infractions directly into commuter-minutes and vehicle-hours lost. |
-| **5** | Tech Architecture | Fusing raw ASTraM police logs with OpenStreetMap/MapmyIndia network layers combined with coordinate-based Random Forest predictions. |
-| **6** | Core Live Demo | Display the dashboard interface. Show the operational shift from basic infraction counting to true TDI severe-risk mapping. |
-| **7** | Dynamic TSP Dispatch | Demonstrate the Priority TSP routing module generating optimal enforcement paths directly from local sector traffic police stations. |
-| **8** | Economic Metrics | Display live calculations of vehicle-hours saved, fuel/productivity recaptured (₹250/hr), and systemic CO₂ emission cuts. |
-| **9** | Production Scaling | Demonstrate the modular architecture: OpenStreetMap network configurations can be seamlessly hot-swapped for enterprise MapmyIndia REST routing APIs by simply changing the environmental base URL endpoint. |
-| **10** | Handoff | Production-ready, keyless, unboxed minimalist dashboard. |
-
----
-
-## 7. Installation & Setup
-
-Ensure you have Python 3.9 or higher installed.
-
-1. **Clone the repository**:
+1. **Clone the Repository:**
    ```bash
    git clone https://github.com/AnkitSinghGTHB/ParkFlow-AI.git
    cd ParkFlow-AI
    ```
 
-2. **Install Dependencies**:
+2. **Install Dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Run Preprocessing**:
+3. **Preprocess ASTraM Violation Data:**
    ```bash
    python preprocess.py
    ```
 
-4. **Train the ML Predictive Model**:
+4. **Train the ML Predictive Model:**
    ```bash
    python model.py
    ```
 
-5. **Launch the Dashboard**:
+5. **Launch the Dashboard Server:**
    ```bash
    streamlit run app.py
    ```
+
+---
+
+## 🚀 6. Hackathon Pitch Deck Blueprint
+
+| Slide | Title | Core Narrative |
+| :---: | :--- | :--- |
+| **1** | Title & Hook | **ParkFlow AI:** Prioritized Traffic Enforcement & Capacity Analytics. |
+| **2** | The Problem | Standard heatmap tools treat residential lane double-parking identically to arterial road blocks, ignoring layout scale. |
+| **3** | The Solution (TDI) | Mathematical prioritizing that factors in road tier weight, lane count bottleneck, and emergency POI proximity. |
+| **4** | BPR Traffic Physics | Validates scoring against the **Bureau of Public Roads (BPR) Delay Model** to count vehicle-hours of delay. |
+| **5** | Tech Architecture | Pipeline connecting raw ASTraM police logs with OpenStreetMap layers and scikit-learn regressors. |
+| **6** | Map & Action Card | Live visual dispatch dashboard showing real-time predictions and exact tow-truck actions. |
+| **7** | Dynamic Routing | Priority TSP routing solver generating optimal patrol vectors directly from municipal stations. |
+| **8** | Economic Quantities | Calculates monetary value recaptured (₹250/hr) and CO₂ offsets (0.42 kg/hr) in real-time. |
+| **9** | Production Scaling | OSM layers can be hot-swapped for enterprise routing APIs (e.g., MapmyIndia REST routing) by re-pointing the query base URL. |
+| **10** | Handoff | Production-ready, zero-config web dashboard built for demo day. |
+
+---
+
+## 🛠️ 7. Engineering Hurdles & Resolutions
+
+* **Tree Ensembles Split Bug on Nominal IDs (`cluster_id`):**
+  * *Hurdle:* Tree algorithms split numeric values continuously (e.g. `cluster_id <= 25.5`). Because IDs were nominal arrays, this introduced geographic nonsense.
+  * *Resolution:* Dropped nominal IDs and trained features directly on continuous `center_lat` and `center_lon`. Trees split coordinates logically, constructing physical bounding boxes.
+* **Pydeck Blank Canvas (Mapbox Keys):**
+  * *Hurdle:* Remote Mapbox styles failed to load without a user-provided token, leaving a blank black canvas on fresh machines.
+  * *Resolution:* Changed base map configuration to `"dark"`, routing the canvas to use open CartoDB Dark Matter tiles, rendering keyless instantly.
+* **ISO8601 Timestamp Exceptions:**
+  * *Hurdle:* Parser crashed on incoming logs containing fractional seconds or timezone offsets (e.g. `.022782+00`).
+  * *Resolution:* Configured `format='ISO8601'` inside the parser, enabling highly optimized, C-based timestamp parsing.
