@@ -568,14 +568,14 @@ with tab_map:
     if enable_routing and not route_df.empty:
         st.markdown(f"#### 📍 Optimized Dispatch Itinerary ({start_station} Start)")
         
-        # Build timeline using clean, styled markdown blocks
-        timeline_md = f"🔵 **Start Station:** `{start_station}`  \n"
+        # Build timeline using clean, styled HTML blocks
+        timeline_html = f"🔵 <b>Start Station:</b> <code>{start_station}</code><br/>"
         for idx, row in route_df.iterrows():
-            timeline_md += f"🔴 **Stop {idx+1}:** `{row['name']}`  \n"
+            timeline_html += f"🔴 <b>Stop {idx+1}:</b> <code>{row['name']}</code><br/>"
         
         st.markdown(f"""
-        <div class="bold-card" style="border-left: 2px solid #30363d; padding-left: 1rem; margin-top: 0.5rem;">
-            {timeline_md}
+        <div class="bold-card" style="border-left: 2px solid #30363d; padding-left: 1rem; margin-top: 0.5rem; line-height: 1.8;">
+            {timeline_html}
         </div>
         """, unsafe_allow_html=True)
 
