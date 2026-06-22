@@ -1,2 +1,5 @@
 # Ignore large raw dataset
 data/jan_to_may_violations.csv
+
+# Ignore local presentation folder
+presentation/
