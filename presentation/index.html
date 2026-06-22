@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkFlow AI - Pitch Deck Presentation</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 27, 34, 0.7);
+            --border-color: rgba(48, 54, 61, 0.6);
+            --primary: #f05252;
+            --primary-glow: rgba(240, 82, 82, 0.4);
+            --secondary: #ff9f0a;
+            --secondary-glow: rgba(255, 159, 10, 0.4);
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.4);
+            --info: #3b82f6;
+            --text-color: #f0f6fc;
+            --text-muted: #8b949e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Animated background mesh */
+        .bg-mesh {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(240, 82, 82, 0.1) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.95) 0px, rgba(11, 15, 25, 1) 100%);
+            animation: mesh-drift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes mesh-drift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 10% 10%; }
+        }
+
+        /* Slide Container */
+        .deck-container {
+            width: 90vw;
+            height: 90vh;
+            max-width: 1280px;
+            max-height: 720px;
+            aspect-ratio: 16/9;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            z-index: 2;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Slide wrapper */
+        .slides-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        /* Single Slide Template */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100px) scale(0.95);
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            align-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0) scale(1);
+        }
+
+        .slide.previous {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-100px) scale(0.95);
+        }
+
+        /* Header Slide Layout (Title) */
+        .slide-title-only {
+            grid-template-columns: 1fr;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Left Content Column */
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .slide-tag {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            display: inline-block;
+        }
+
+        .slide-heading {
+            font-size: 2.75rem;
+            font-weight: 800;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subheading {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slide-list li {
+            position: relative;
+            padding-left: 2rem;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .slide-list li::before {
+            content: "➔";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Right Graphical Column */
+        .slide-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        /* Controls / Footer */
+        .deck-footer {
+            height: 60px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            background: rgba(11, 15, 25, 0.5);
+            z-index: 10;
+        }
+
+        .deck-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .progress-bar-container {
+            width: 300px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 10%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        /* Slide Specific Animations / SVGs */
+        .logo-pulse {
+            width: 150px;
+            height: 150px;
+            animation: pulse-ring 3s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; box-shadow: 0 0 0 0 var(--primary-glow); }
+            50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 40px 10px var(--primary-glow); }
+            100% { transform: scale(0.95); opacity: 0.5; box-shadow: 0 0 0 0 var(--primary-glow); }
+        }
+
+        /* Slide 2: Traffic gridlock SVG */
+        .road-simulation {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .road-car {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            background: var(--text-muted);
+            border-radius: 4px;
+            transition: left 3s ease-in-out;
+        }
+        
+        .road-car.red-block {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+            animation: flashing-block 1s ease infinite alternate;
+        }
+
+        @keyframes flashing-block {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; box-shadow: 0 0 15px var(--primary); }
+        }
+
+        /* Slide 3: Formula highlights */
+        .formula-container {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            background: #161b22;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .math-part {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .math-part:hover {
+            background: var(--primary);
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        /* Slide 4: Chart Simulation */
+        .bpr-chart-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            border-bottom: 2px solid var(--text-muted);
+            border-left: 2px solid var(--text-muted);
+        }
+
+        .bpr-curve {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            stroke: var(--primary);
+            stroke-width: 4;
+            fill: none;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        .slide.active .bpr-curve {
+            animation: draw-line 2s forwards ease-in-out;
+        }
+
+        @keyframes draw-line {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Slide 5: Pipeline Node System */
+        .pipeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            width: 100%;
+        }
+
+        .pipeline-node {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(50px);
+            opacity: 0;
+            transition: all 0.5s ease-out;
+        }
+
+        .slide.active .pipeline-node {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .slide.active .pipeline-node:nth-child(1) { transition-delay: 0.2s; }
+        .slide.active .pipeline-node:nth-child(2) { transition-delay: 0.4s; }
+        .slide.active .pipeline-node:nth-child(3) { transition-delay: 0.6s; }
+        .slide.active .pipeline-node:nth-child(4) { transition-delay: 0.8s; }
+
+        .node-num {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        /* Slide 7: Pathfinder animation */
+        .pathfinder-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .path-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--info);
+            position: absolute;
+        }
+
+        .path-truck {
+            position: absolute;
+            font-size: 1.5rem;
+            width: 30px;
+            height: 30px;
+            z-index: 5;
+            transition: all 1s ease-in-out;
+        }
+
+        /* Slide 8: Live metric counts */
+        .impact-metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .impact-card {
+            background: #161b22;
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .impact-val {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Monospace layout code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.1em 0.3em;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-mesh"></div>
+
+    <div class="deck-container">
+        
+        <!-- Slides Wrapper -->
+        <div class="slides-wrapper">
+            
+            <!-- Slide 1: Cover -->
+            <div class="slide slide-title-only active" id="slide-1">
+                <div class="slide-content" style="align-items: center;">
+                    <div style="background: var(--primary); color: white; padding: 0.4rem 1rem; border-radius: 4px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.15em; margin-bottom: 1.5rem; display: inline-block;">
+                        FLIPKARK GRIDLOCK 2.0 ROUND 2 PITCH
+                    </div>
+                    <h1 class="slide-heading" style="font-size: 4.5rem; margin-bottom: 0.5rem; letter-spacing: -0.02em;">ParkFlow AI</h1>
+                    <p style="font-size: 1.5rem; font-weight: 600; color: var(--text-muted); margin-bottom: 2rem;">
+                        Predictive Priority Enforcement & Traffic-Impact Quantification
+                    </p>
+                    <div class="logo-pulse" style="background: rgba(240, 82, 82, 0.1); border: 2px solid var(--primary); border-radius: 50%; width: 90px; height: 90px; display: flex; justify-content: center; align-items: center;">
+                        <span style="font-size: 2.25rem;">🛑</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: The Problem -->
+            <div class="slide" id="slide-2">
+                <div class="slide-content">
+                    <span class="slide-tag">The Structural Blindspot</span>
+                    <h2 class="slide-heading">The "Heatmap Trap" in Traffic Policing</h2>
+                    <p class="slide-subheading">
+                        Traditional GIS maps cluster incidents by frequency. But counting infractions ignores the physical layout and structural properties of the road network.
+                    </p>
+                    <ul class="slide-list">
+                        <li><b>No Prioritization:</b> 10 violations on a 4-lane residential side-street flag identically to 1 blockage on a 1-lane main arterial road.</li>
+                        <li><b>Reactive Ops:</b> Tow-trucks chase historical maps instead of predicting live capacity drops in real-time.</li>
+                        <li><b>Cascading Bottlenecks:</b> Small blockages at critical POI access points (like hospitals) lock regional traffic networks.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual">
+                    <div class="road-simulation" style="display: flex; flex-direction: column; justify-content: center; gap: 40px; width: 100%;">
+                        <!-- Multi-lane road -->
+                        <div style="border-top: 1px dashed #30363d; border-bottom: 1px dashed #30363d; padding: 10px 0; position: relative; height: 50px;">
+                            <span style="position: absolute; top:-20px; font-size: 0.75rem; color: var(--success);">4-LANE RESIDENTIAL ROAD (80% Flow capacity remaining)</span>
+                            <div class="road-car" style="left: 10px; top: 15px;">🚗</div>
+                            <div class="road-car red-block" style="left: 100px; top: 15px;">🚘</div>
+                            <div class="road-car" style="left: 200px; top: 15px;">🚙</div>
+                        </div>
+                        
+                        <!-- 1-lane road -->
+                        <div style="border-top: 1px dashed #f05252; border-bottom: 1px dashed #f05252; padding: 10px 0; position: relative; height: 50px; background: rgba(240, 82, 82, 0.05);">
+                            <span style="position: absolute; top:-20px; font-size: 0.75rem; color: var(--primary);">1-LANE ARTERIAL ROAD (0% Flow capacity - GRIDLOCK)</span>
+                            <div class="road-car red-block" style="left: 140px; top: 15px;">🚗</div>
+                            <div class="road-car" style="left: 10px; top: 15px;">🚘</div>
+                            <div class="road-car" style="left: 50px; top: 15px;">🚙</div>
+                            <div class="road-car" style="left: 90px; top: 15px;">🚕</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: The Solution (TDI) -->
+            <div class="slide" id="slide-3">
+                <div class="slide-content">
+                    <span class="slide-tag">Network Prioritization</span>
+                    <h2 class="slide-heading">The Traffic Disruption Index (TDI)</h2>
+                    <p class="slide-subheading">
+                        ParkFlow AI ranks enforcement hotspots by dividing violation volume by lane capacity and weighting by road classification and POI proximity.
+                    </p>
+                    <div class="formula-container">
+                        <div style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.1em;">Disruption Priority Heuristic</div>
+                        <div style="font-size: 1.45rem; font-weight: 800;">
+                            TDI = <span class="math-part" style="border: 1px solid var(--primary);" title="Violation Volume">Violations</span> &times; <span class="math-part" style="border: 1px solid var(--secondary);" title="Primary = 3.0x, Residential = 1.0x">Road Class Weight</span> / <span class="math-part" style="border: 1px solid var(--info);" title="Fewer lanes = Higher score">Lanes</span>
+                        </div>
+                        <div style="font-size: 1.1rem; margin-top: 0.5rem;">
+                            &times; <span class="math-part" style="border: 1px solid var(--success);" title="Hospitals = 1.5x, Transit Hubs = 1.3x">POI Multiplier</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-visual" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">TDI SHIFT EXAMPLE (ASTraM Dataset):</div>
+                    <!-- Naive rank card -->
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.9rem; font-weight: 600;">GKVK Road (secondary, 2 lanes)</div>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">6,126 violations (Naive Rank #8)</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.95rem; font-weight: 800; color: var(--text-muted);">TDI: 6,738</div>
+                        </div>
+                    </div>
+                    
+                    <!-- TDI priority card -->
+                    <div style="background: rgba(240, 82, 82, 0.05); border: 1px solid var(--primary); border-radius: 6px; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; position: relative;">
+                        <span style="position: absolute; right: 10px; top:-10px; background: var(--primary); color: white; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 3px;">TDI PRIORITY RISE</span>
+                        <div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: var(--primary);">8th Cross Road (tertiary, 1 lane)</div>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">10,026 violations + 6 POIs (TDI Rank #5)</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">TDI: 24,062</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: BPR Traffic Physics -->
+            <div class="slide" id="slide-4">
+                <div class="slide-content">
+                    <span class="slide-tag">Mathematical Verification</span>
+                    <h2 class="slide-heading">The Bureau of Public Roads (BPR) Delay Model</h2>
+                    <p class="slide-subheading">
+                        To validate heuristic TDI priority, we map coordinate-level violations directly into vehicle-hours lost and commute delay metrics using standard traffic flow equations.
+                    </p>
+                    <div class="formula-container" style="font-size: 1.15rem; padding: 1rem;">
+                        T_congested = T_free &times; [ 1 + 0.15 &times; ( V / C_reduced )<sup>4</sup> ]
+                    </div>
+                    <ul class="slide-list" style="gap: 0.5rem;">
+                        <li style="font-size: 0.9rem;"><b>Logarithmic Capacity Reduction:</b> $C_{reduced} = (lanes - blocked\_lanes) \times 1500$.</li>
+                        <li style="font-size: 0.9rem;"><b>Idling Loss Valued:</b> Delayed commuter hours priced at Bengaluru average productivity value of <b>₹250/hour</b>.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual" style="flex-direction: column; justify-content: space-between;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; align-self: flex-start; margin-bottom: 10px;">EXPONENTIAL DELAY OVER DEMAND (V/C)</div>
+                    <div class="bpr-chart-container">
+                        <!-- Simulated Chart Curve -->
+                        <svg class="bpr-curve" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M 0,95 Q 40,90 70,70 T 100,5" />
+                        </svg>
+                        <div style="position: absolute; right: 10px; top: 10px; color: var(--primary); font-size: 0.85rem; font-weight: 800;">Delay spikes exponentially</div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">Normalized flow capacity reduction models severe bottlenecking.</div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Technical Pipeline -->
+            <div class="slide" id="slide-5">
+                <div class="slide-content">
+                    <span class="slide-tag">Architecture</span>
+                    <h2 class="slide-heading">End-to-End Pipeline</h2>
+                    <p class="slide-subheading">
+                        From raw coordinates to OSRM routes, the data pipeline runs on unbuffered scripts with safe caching layers.
+                    </p>
+                    <ul class="slide-list">
+                        <li><b>Memoization:</b> Local JSON caching (`osm_cache.json`) eliminates Overpass API rate-limits.</li>
+                        <li><b>Random Forest Regressor:</b> Trained on spatial coordinates and hour features to forecast surges (MAE: 6.19).</li>
+                    </ul>
+                </div>
+                <div class="slide-visual">
+                    <div class="pipeline">
+                        <div class="pipeline-node">
+                            <div class="node-num">1</div>
+                            <div style="font-size: 0.85rem;"><b>Raw Logs In</b><br/><span style="font-size:0.75rem; color:var(--text-muted);">298k row ASTraM dataset filtered to Bengaluru</span></div>
+                        </div>
+                        <div class="pipeline-node">
+                            <div class="node-num">2</div>
+                            <div style="font-size: 0.85rem;"><b>DBSCAN Cluster</b><br/><span style="font-size:0.75rem; color:var(--text-muted);">Coordinate clustering binned within 50m</span></div>
+                        </div>
+                        <div class="pipeline-node">
+                            <div class="node-num">3</div>
+                            <div style="font-size: 0.85rem;"><b>OSM API Query</b><br/><span style="font-size:0.75rem; color:var(--text-muted);">Enriches lanes, roads & POIs via Overpass queries</span></div>
+                        </div>
+                        <div class="pipeline-node">
+                            <div class="node-num">4</div>
+                            <div style="font-size: 0.85rem;"><b>Predict & Route</b><br/><span style="font-size:0.75rem; color:var(--text-muted);">ML hour-ahead predictions & Greedy TSP OSRM routing</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Dashboard Interface -->
+            <div class="slide" id="slide-6">
+                <div class="slide-content">
+                    <span class="slide-tag">Core UI Showcase</span>
+                    <h2 class="slide-heading">Interactive Map & Live Dispatch Card</h2>
+                    <p class="slide-subheading">
+                        The officer dashboard displays WebGL-rendered maps alongside prescriptive dispatch instructions.
+                    </p>
+                    <ul class="slide-list">
+                        <li><b>TDI Color Code:</b> Hotspots sized by violation volume and colored by TDI (Red = Critical, Yellow = Moderate).</li>
+                        <li><b>Action Card:</b> Provides a clear sentence describing the exact action: what assets to send, where, and when.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    <!-- Dispatch Mock Card -->
+                    <div style="background: rgba(240, 82, 82, 0.05); border: 1px solid var(--primary); border-radius: 6px; padding: 1rem; border-left-width: 4px;">
+                        <div style="font-weight: 800; font-size: 0.8rem; color: var(--primary); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">Recommended Enforcement Action</div>
+                        <div style="font-size: 0.9rem; line-height: 1.5;">
+                            Dispatch <b>2 Tow-Trucks</b> to <b>New Horizon College Road</b> by <b>17:30 PM</b>. 
+                            Clearing <b>12</b> predicted vehicles will save <b>84.2 vehicle-hours</b> of delay (<b>₹21,050</b> saved).
+                        </div>
+                    </div>
+                    <div style="background: #161b22; border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
+                        [WebGL pydeck Scatterplot Layer & CartoDB Dark Matter Base]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Dispatch TSP Routing -->
+            <div class="slide" id="slide-7">
+                <div class="slide-content">
+                    <span class="slide-tag">Resource Optimization</span>
+                    <h2 class="slide-heading">Priority-Weighted Route Optimizer</h2>
+                    <p class="slide-subheading">
+                        Rather than chasing random incidents, officers follow an optimized itinerary starting from municipal traffic stations.
+                    </p>
+                    <ul class="slide-list">
+                        <li><b>Travelling Salesperson Solver:</b> Greedy priority-weighted routing sweeps the most disruptive active hotspots.</li>
+                        <li><b>Actual Road Paths:</b> Integrates OSRM driving routes to trace paths along realistic streets rather than straight lines.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual">
+                    <div class="pathfinder-container">
+                        <!-- Station node -->
+                        <div class="path-dot" style="left: 20%; top: 30%; background: var(--info);" title="Station"></div>
+                        <span style="position: absolute; left: 15%; top: 15%; font-size: 0.7rem;">Cubbon Park Station</span>
+                        
+                        <!-- Waypoints -->
+                        <div class="path-dot" style="left: 45%; top: 60%; background: var(--primary);" title="Stop 1"></div>
+                        <div class="path-dot" style="left: 75%; top: 40%; background: var(--primary);" title="Stop 2"></div>
+                        
+                        <!-- Route Line -->
+                        <svg style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;">
+                            <path d="M 60,60 L 135,120 L 225,80" style="stroke: var(--primary); stroke-width: 2; fill: none; stroke-dasharray: 5, 5;" />
+                        </svg>
+                        
+                        <!-- Pulsing Police Truck Icon -->
+                        <div class="path-truck" style="left: 18%; top: 22%;">🚛</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Economic & Climate Impact -->
+            <div class="slide" id="slide-8">
+                <div class="slide-content">
+                    <span class="slide-tag">Quantified ROI</span>
+                    <h2 class="slide-heading">Economic Recapture & Emissions Mitigation</h2>
+                    <p class="slide-subheading">
+                        ParkFlow AI converts cleared blockages into hard municipal savings. Traffic engineers can test scenarios live using the clearance sandbox.
+                    </p>
+                    <ul class="slide-list">
+                        <li><b>Clearance Slider:</b> Dynamically adjust targeted clearance rates ($0-100\%$) to calculate recovery.</li>
+                        <li><b>Supply Chain Protection:</b> Safeguards hyper-local logistics and last-mile SLAs.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual">
+                    <div class="impact-metrics-grid">
+                        <div class="impact-card">
+                            <div class="impact-val" id="metric-saving">₹25,840</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">ECONOMIC VALUE SAVED</div>
+                        </div>
+                        <div class="impact-card">
+                            <div class="impact-val" id="metric-co2" style="color: var(--info);">43.4 kg</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">CO₂ OFFSETS</div>
+                        </div>
+                        <div class="impact-card" style="grid-column: span 2;">
+                            <div class="impact-val" id="metric-hours" style="color: var(--secondary);">103.2 hrs</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">COMMUTER TIME RECOVERED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Scalability & Integration -->
+            <div class="slide" id="slide-9">
+                <div class="slide-content">
+                    <span class="slide-tag">Future Roadmap</span>
+                    <h2 class="slide-heading">Scalable Integration Architecture</h2>
+                    <p class="slide-subheading">
+                        ParkFlow AI is built with modular components that hot-swap from open-source baselines to commercial APIs.
+                    </p>
+                    <ul class="slide-list">
+                        <li><b>Enterprise Routing:</b> OSRM layers can be hot-swapped for MapmyIndia REST routing by changing config URLs.</li>
+                        <li><b>Real-time Integration:</b> Designed to consume live camera feeds or citizen mobile reports via ASTraM hooks.</li>
+                        <li><b>Asset Allocation:</b> Expands to dynamically dispatch different enforcement assets (wheel-locks vs. heavy tow rigs).</li>
+                    </ul>
+                </div>
+                <div class="slide-visual" style="flex-direction: column; justify-content: center; gap: 15px; align-items: stretch;">
+                    <div style="border: 1px solid var(--info); padding: 10px; border-radius: 6px; font-size: 0.8rem; background: rgba(59, 130, 246, 0.05);">
+                        <b>API Integration Layer</b><br/><span style="font-size: 0.7rem; color: var(--text-muted);">MapmyIndia / Google Maps Enterprise API support</span>
+                    </div>
+                    <div style="border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 0.8rem; background: rgba(255, 255, 255, 0.01);">
+                        <b>DBSCAN Processing Engine</b><br/><span style="font-size: 0.7rem; color: var(--text-muted);">Consumes real-time streaming coordinate feeds</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Conclusion -->
+            <div class="slide slide-title-only" id="slide-10">
+                <div class="slide-content" style="align-items: center; gap: 2rem;">
+                    <span class="slide-tag">Operational Handoff</span>
+                    <h2 class="slide-heading" style="font-size: 3.5rem;">ParkFlow AI</h2>
+                    <p class="slide-subheading" style="max-width: 700px;">
+                        A zero-config, highly-defensible congestion quantification engine that shifts municipal enforcement from heatmaps to prioritized priority dispatching.
+                    </p>
+                    <div style="display: flex; gap: 2rem; font-weight: 600; font-size: 1.1rem; color: var(--primary);">
+                        <span>✓ Validated Math</span>
+                        <span>✓ Production-Ready</span>
+                        <span>✓ Keyless Dashboard</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer / Controls -->
+        <div class="deck-footer">
+            <div class="deck-info">
+                ParkFlow AI Deck | Slide <span id="current-slide-num">1</span> of 10
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-indicator"></div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="btn-prev">◀ Prev</button>
+                <button class="btn" id="btn-next">Next ▶</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Slide Deck Logic -->
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const currentSlideNum = document.getElementById('current-slide-num');
+        const progressIndicator = document.getElementById('progress-indicator');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const truck = document.querySelector('.path-truck');
+        
+        let activeIndex = 0;
+
+        function updateDeck() {
+            // Update slides visibility classes
+            slides.forEach((slide, idx) => {
+                slide.classList.remove('active', 'previous');
+                if (idx === activeIndex) {
+                    slide.classList.add('active');
+                } else if (idx < activeIndex) {
+                    slide.classList.add('previous');
+                }
+            });
+
+            // Update footer information
+            currentSlideNum.textContent = activeIndex + 1;
+            progressIndicator.style.width = `${((activeIndex + 1) / slides.length) * 100}%`;
+
+            // Custom animations triggered on slide activation
+            // Slide 7 Pathfinder Route animation
+            if (activeIndex === 6 && truck) {
+                // Reset position first
+                truck.style.left = '18%';
+                truck.style.top = '22%';
+                setTimeout(() => {
+                    // Move to stop 1
+                    truck.style.left = '43%';
+                    truck.style.top = '52%';
+                }, 1000);
+                setTimeout(() => {
+                    // Move to stop 2
+                    truck.style.left = '73%';
+                    truck.style.top = '32%';
+                }, 2500);
+            }
+        }
+
+        function nextSlide() {
+            if (activeIndex < slides.length - 1) {
+                activeIndex++;
+                updateDeck();
+            }
+        }
+
+        function prevSlide() {
+            if (activeIndex > 0) {
+                activeIndex--;
+                updateDeck();
+            }
+        }
+
+        // Click Event Handlers
+        btnNext.addEventListener('click', nextSlide);
+        btnPrev.addEventListener('click', prevSlide);
+
+        // Keyboard Event Handlers
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'Enter') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize presentation
+        updateDeck();
+    </script>
+</body>
+</html>
