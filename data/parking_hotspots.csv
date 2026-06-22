@@ -36,6 +36,7 @@ cluster_id,center_lat,center_lon,violation_count,two_wheeler_count,helmet_count,
 342,12.938382547319698,77.58448434175925,903,753,0,0,23,83.38870431893687,secondary,T. Mariyappa Road,2,40,8,"Ramakrishna Nursing Home and Hospital (hospital), Community English High School (school), Sree Rama Vidyalaya (school)",2.2,1489.95
 1071,13.027851840106978,77.57473395059183,1230,400,0,0,39,32.52032520325203,tertiary,80 Feet Road,2,50,1,Nethra Eye Hospital (hospital),1.6,1476.0
 657,12.971740342784413,77.65810205808297,1219,763,0,0,81,62.59228876127973,secondary,GM Palya Main Road,2,40,1,Poorna Prajna Education Centre (school),2.2,1474.9900000000002
+1274,13.097278586758277,77.59932700217281,836,424,0,0,54,50.717703349282296,trunk,Bellary Road,3,80,2,"Ashwini Hospital (hospital), Sparsh Hospital (hospital)",3.5,1463.0
 635,12.97260485266916,77.60717148651065,1713,1000,0,0,20,58.37711617046117,secondary,Brigade Road,3,40,5,"JD Institute of Fashion Technology (college), Pearl Academy (prep_school), KSRP Research and Training Center (college)",2.2,1381.8200000000002
 275,12.925312485249906,77.61876357288858,606,35,0,0,4,5.775577557755775,primary,Mahayogi Vemana Road,2,40,7,"Venkateshwara Hospital (hospital), Surya Diagnostics and Health Services (hospital), Sri Sathyanarayana HPS Madival (school)",3.0,1363.5
 157,12.90806554575707,77.60078947620633,601,523,0,0,20,87.0216306156406,primary,Bannerghatta Road,2,40,2,"Sri Balamuri Vidya Samste LPS, B T M Layout W No 65 (school), Dr. Agarwal's Eye Hospital (hospital)",3.0,1352.25
@@ -48,14 +49,13 @@ cluster_id,center_lat,center_lon,violation_count,two_wheeler_count,helmet_count,
 465,12.955979184008308,77.58552200571133,963,265,0,0,12,27.51817237798546,primary,Lalbagh Road,3,40,1,Al-Ameen Arts and Science College (college),3.0,1059.3000000000002
 627,12.971301410341951,77.59677143711426,1199,353,0,0,11,29.441201000834027,tertiary,Vittal Mallya Road,2,40,2,"Bishop Cotton Boys School (school), St. Joseph's Indian High School (school)",1.6,1055.1200000000001
 282,12.930971437064414,77.63209221362196,947,374,0,0,6,39.493136219640974,secondary,80 Feet Road,2,40,0,None,2.2,1041.7
-1274,13.097278586758277,77.59932700217281,836,424,0,0,54,50.717703349282296,trunk,Bellary Road,3,80,0,None,3.5,975.3333333333334
+583,12.964369269491526,77.5539912168281,826,445,0,0,58,53.87409200968523,tertiary,Hosahalli Main Road,2,40,2,"Jawahar School (school), Government Hospital (hospital)",1.6,991.2
 1166,13.04749798455814,77.5756210323721,1075,765,0,0,73,71.16279069767441,tertiary,Sanjaynagar Main Road,2,50,1,Shanthiniketan School (school),1.6,946.0000000000001
 775,12.988742629672688,77.53773191211926,1018,496,0,0,17,48.722986247544206,tertiary,1st Main Road,2,40,2,"Zee Institute of Creative Arts (college), Sayuri (language_school)",1.6,895.8400000000001
+636,12.97210590775011,77.71173103997182,846,83,0,0,14,9.810874704491725,primary,Kundalahalli Main Road,3,40,0,None,3.0,846.0
 715,12.979003888897871,77.64018681340858,626,360,0,0,33,57.50798722044729,secondary,Chinmaya Mission Hospital Road,2,40,8,"Kairalee Nikethan Education Trust (college), Holy Shepherd English High School (school), Spastics Society of Karnataka (school)",2.2,757.46
 198,12.913685192092256,77.60650459719935,607,397,0,0,1,65.40362438220758,tertiary,7th Main Road,2,40,3,"Kids Care Clinic (hospital), Marigold Hospital (hospital), Sambhavam - Centre for Autism (school)",1.6,728.4000000000001
 706,12.978139496137931,77.5909256862069,725,381,0,0,7,52.55172413793103,primary,Doctor B R Ambedkar Veedhi,3,40,0,None,3.0,725.0
 797,12.987592427516779,77.73468174026846,596,586,0,0,39,98.3221476510067,tertiary,Pattandur Agrahara Road,2,40,3,"Etram Dance Academy (dancing_school), Aster Women and Children Hospital (hospital), Aster Whitefield Hospital (hospital)",1.6,715.2
-583,12.964369269491526,77.5539912168281,826,445,0,0,58,53.87409200968523,tertiary,Hosahalli Main Road,2,40,0,None,1.6,660.8000000000001
+1014,13.021893170288624,77.59265347707979,589,312,0,0,22,52.97113752122241,tertiary,RT Nagar Main Road,2,40,1,Florence School (school),1.6,518.32
 1001,13.017840319284602,77.53158712255055,643,97,0,0,8,15.085536547433904,tertiary,3rd Cross Road,2,40,0,None,1.6,514.4
-636,12.97210590775011,77.71173103997182,846,83,0,0,14,9.810874704491725,residential,Unnamed Road,2,40,0,None,1.0,423.0
-1014,13.021893170288624,77.59265347707979,589,312,0,0,22,52.97113752122241,residential,Unnamed Road,2,40,1,Florence School (school),1.0,323.95000000000005

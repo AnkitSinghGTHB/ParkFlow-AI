@@ -1022,5 +1022,37 @@
             "type": "school",
             "name": "Florence School"
         }
-    ]
+    ],
+    "road_12.9721_77.7117": {
+        "highway": "primary",
+        "name": "Kundalahalli Main Road",
+        "lanes": "3",
+        "maxspeed": "40"
+    },
+    "poi_13.0973_77.5993": [
+        {
+            "type": "hospital",
+            "name": "Ashwini Hospital"
+        },
+        {
+            "type": "hospital",
+            "name": "Sparsh Hospital"
+        }
+    ],
+    "poi_12.9644_77.5540": [
+        {
+            "type": "school",
+            "name": "Jawahar School"
+        },
+        {
+            "type": "hospital",
+            "name": "Government Hospital"
+        }
+    ],
+    "road_13.0219_77.5927": {
+        "highway": "tertiary",
+        "name": "RT Nagar Main Road",
+        "lanes": "2",
+        "maxspeed": "40"
+    }
 }
