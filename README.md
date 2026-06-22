@@ -1,10 +1,10 @@
 # ParkFlow AI
 **Prioritized Parking Enforcement & Congestion Quantification for Bengaluru**
 
-> “Not just *where* violations happen—but how much congestion they cause,  
+> “Not just *where* violations happen; but how much congestion they cause,  
 > how much delay they create, and exactly where to send the tow‑truck.”
 
-[![Streamlit Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://github.com/AnkitSinghGTHB/ParkFlow-AI)
+[![Streamlit Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://parkflow.streamlit.app/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ---
@@ -25,7 +25,7 @@ prioritize the ones that actually choke the city’s arteries.
 ---
 
 ## Live Demo
-👉 [**Try it here**](https://github.com/AnkitSinghGTHB/ParkFlow-AI)
+👉 [**Try it here**](https://parkflow.streamlit.app/)
 
 ### Dashboard Interface Preview
 ![ParkFlow AI Dashboard Preview](screenshots/dashboard_home.png)
