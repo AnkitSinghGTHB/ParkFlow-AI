@@ -32,7 +32,7 @@ prioritize the ones that actually choke the city’s arteries.
 
 ---
 
-## How It Works (30‑second read)
+## How It Works
 
 1. **Data In** → Anonymized police violation logs (Jan–May 2024)  
 2. **Preprocess** → DBSCAN clusters hotspots, OpenStreetMap enriches with lane/POI data  
@@ -80,32 +80,6 @@ $$T_{\text{congested}} = T_{\text{free}} \times \left( 1 + 0.15 \times \left( \f
 * **Finding:** The top hotspot (Hospital Road) contains 61,543 violations (over 20% of the dataset).
 * **Data-Collection Artifact:** Many citation systems log coordinates using a fixed junction reference point (or closest police station reference) rather than precise GPS coordinates. When binning to 4 decimal places (50m precision), thousands of historical records collapse into a single junction coordinate.
 * **Enforcement Handling:** ParkFlow AI's congestion engine prevents this spike from overwhelming resource planning by using a logarithmic capacity reduction formula ($C_{\text{reduced}}$) in the BPR model. This ensures that the tow-truck routing solver remains geographically balanced instead of getting trapped at a single junction.
-
----
-
-### 🚀 Hackathon Pitch Deck Blueprint
-
-| Slide | Title | Core Narrative |
-| :---: | :--- | :--- |
-| **1** | Title & Hook | **ParkFlow AI:** Prioritized Parking Enforcement & Traffic-Impact Quantification. |
-| **2** | The Problem | Heatmaps treat residential lane double-parking identically to arterial highway blocks, ignoring layout scale. |
-| **3** | The Solution (TDI) | Mathematical prioritizing that factors in road tier weight, lane count bottleneck, and emergency POI proximity. |
-| **4** | BPR Traffic Physics | Fuses BPR travel time equations to convert raw infractions into vehicle-hours lost. |
-| **5** | Tech Architecture | Fuses raw ASTraM police logs with OpenStreetMap layers and scikit-learn regressors. |
-| **6** | Map & Action Card | Live visual dispatch dashboard showing real-time predictions and exact tow-truck actions. |
-| **7** | Dynamic Routing | Priority TSP routing solver generating optimal patrol vectors directly from municipal stations. |
-| **8** | Economic Quantities | Calculates monetary value recaptured (₹250/hr) and CO₂ offsets (0.42 kg/hr) in real-time. |
-| **9** | Production Scaling | OSM layers can be hot-swapped for enterprise routing APIs (e.g., MapmyIndia REST routing). |
-| **10** | Handoff | Production-ready, zero-config web dashboard built for demo day. |
-
----
-
-### 🛠️ Key Engineering Resolutions
-* **The `cluster_id` Tree Bug:** Tree algorithms split numeric values continuously (e.g., `cluster_id <= 25.5`). We dropped nominal IDs and trained features directly on continuous `center_lat` and `center_lon` to build logical geographic bounding boxes.
-* **DateTime Format Variance:** Configured `format='ISO8601'` inside the Pandas I/O parser, enabling highly optimized, C-based timestamp parsing.
-* **Blank Map Canvas (Mapbox Keys):** Rerouted Pydeck styles to use the open-source CartoDB Dark Matter tileset, enabling zero-config keyless rendering instantly.
-* **Pydeck Tooltip Formatting Bug:** Pre-formatted float variables into clean strings inside the Python backend to resolve Deck.gl JS template parsing constraints.
-* **OSM API Query Overloads:** Patched `preprocess.py` to use a custom User-Agent, increased network timeouts to 20 seconds, implemented rate-limit retries, and added unbuffered logging with a 0.3s sleep interval to prevent Overpass blocks.
 
 </details>
 
