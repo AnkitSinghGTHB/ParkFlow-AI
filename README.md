@@ -65,8 +65,8 @@ $$T_{\text{congested}} = T_{\text{free}} \times \left( 1 + 0.15 \times \left( \f
 1. **Free-Flow Time ($T_{\text{free}}$):** Derived from OSM segment speed limits: $T_{\text{free}} = \frac{1}{\text{maxspeed}} \times 60$ minutes.
 2. **Traffic Volume ($V$):** Modeled based on urban road tier baselines (Primary = 1200 veh/hr/lane, Secondary = 800, Tertiary = 500, Residential = 200).
 3. **Logarithmic Capacity Reduction ($C_{\text{reduced}}$):**
-   $$C_{\text{reduced}} = (\text{lanes} - \text{blocked\_lanes}) \times 1500$$
-   $$\text{blocked\_lanes} = \min\left(1.0, \frac{\log(1 + \text{count})}{2}\right)$$
+   $$C_{\text{reduced}} = (\text{lanes} - \text{blocked lanes}) \times 1500$$
+   $$\text{blocked lanes} = \min\left(1.0, \frac{\log(1 + \text{count})}{2}\right)$$
    *Logarithmic Rationale:* Diminishing marginal disruption. The first two cars create the bottleneck layout; subsequent vehicles line up behind and extend the queue, but do not block additional travel lanes.
 
 #### Macroeconomic & Emission Quantifications
